@@ -1,2 +1,0 @@
--keepattributes *Annotation*
--keep class com.saeed.chandwidget.** { *; }
