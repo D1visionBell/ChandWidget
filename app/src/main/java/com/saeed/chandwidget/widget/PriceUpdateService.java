@@ -21,6 +21,7 @@ import java.util.Set;
 public class PriceUpdateService extends Service {
     private static final String TAG = "PriceUpdateService";
     private static final String CHANNEL_ID = "chand_update";
+    private static final int NOTIF_ID = 1;
 
     @Override
     public void onCreate() {
@@ -30,11 +31,14 @@ public class PriceUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // FIX: must call startForeground immediately on Android 8+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1, buildNotification());
-        }
+        // CRITICAL FIX: startForeground must be called unconditionally and immediately
+        // on Android 8+ before doing ANY work. On Android 14+ (API 34), the matching
+        // permission (FOREGROUND_SERVICE_DATA_SYNC) must also be declared in Manifest.
+        // Calling this inside an if(Build >= O) was the direct cause of the crash because
+        // the system enforces it for ALL devices with our targetSdk=34.
+        startForeground(NOTIF_ID, buildNotification());
 
+        final int id = startId;
         new Thread(() -> {
             try {
                 fetchAndStore();
@@ -42,9 +46,10 @@ public class PriceUpdateService extends Service {
             } catch (Exception e) {
                 Log.e(TAG, "Error in update", e);
             } finally {
-                stopSelf(startId);
+                stopSelf(id);
             }
         }).start();
+
         return START_NOT_STICKY;
     }
 
@@ -54,18 +59,20 @@ public class PriceUpdateService extends Service {
         int[] ids = mgr.getAppWidgetIds(cn);
 
         Set<String> keysToFetch = new HashSet<>();
-        for (int id : ids) {
+        for (int widgetId : ids) {
             for (int slot = 0; slot < 3; slot++) {
-                // FIX: use per-instance slot keys
-                keysToFetch.add(Prefs.getSlot(this, id, slot));
+                String key = Prefs.getSlot(this, widgetId, slot);
+                // FIX: guard against empty/null key that slipped through
+                if (key != null && !key.isEmpty()) {
+                    keysToFetch.add(key);
+                }
             }
         }
-        // Fallback defaults if no widgets yet
-        if (keysToFetch.isEmpty()) {
-            keysToFetch.add(Prefs.DEFAULT_SLOT0);
-            keysToFetch.add(Prefs.DEFAULT_SLOT1);
-            keysToFetch.add(Prefs.DEFAULT_SLOT2);
-        }
+
+        // Always ensure defaults are fetched so first-launch shows data
+        keysToFetch.add(Prefs.DEFAULT_SLOT0);
+        keysToFetch.add(Prefs.DEFAULT_SLOT1);
+        keysToFetch.add(Prefs.DEFAULT_SLOT2);
 
         for (String key : keysToFetch) {
             PriceData data = TgjuApi.fetch(key);
@@ -85,6 +92,8 @@ public class PriceUpdateService extends Service {
                     CHANNEL_ID, "Widget Update", NotificationManager.IMPORTANCE_MIN);
             ch.setDescription("Fetching price data");
             ch.setShowBadge(false);
+            ch.enableVibration(false);
+            ch.setSound(null, null);
             NotificationManager nm = getSystemService(NotificationManager.class);
             if (nm != null) nm.createNotificationChannel(ch);
         }
@@ -93,10 +102,11 @@ public class PriceUpdateService extends Service {
     private Notification buildNotification() {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Chand Widget")
-                .setContentText("Updating prices...")
+                .setContentText("در حال بروزرسانی قیمت‌ها...")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setSilent(true)
+                .setOngoing(false)
                 .build();
     }
 

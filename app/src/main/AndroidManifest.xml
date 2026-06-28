@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Required on Android 14+ for foregroundServiceType="dataSync" -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:allowBackup="true"
@@ -40,7 +42,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-        <!-- Update Service — declared as foreground service -->
+        <!-- Update Service -->
         <service
             android:name=".widget.PriceUpdateService"
             android:exported="false"

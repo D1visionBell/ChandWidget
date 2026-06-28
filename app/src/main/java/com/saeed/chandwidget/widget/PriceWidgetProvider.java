@@ -31,6 +31,8 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             updateWidget(ctx, mgr, id);
         }
         scheduleAlarm(ctx);
+        // FIX: always trigger a fresh fetch on update so widget is never empty
+        triggerFetch(ctx);
     }
 
     @Override
@@ -51,14 +53,12 @@ public class PriceWidgetProvider extends AppWidgetProvider {
     public static void updateWidget(Context ctx, AppWidgetManager mgr, int appWidgetId) {
         try {
             boolean persian = Prefs.isPersian(ctx);
-            // CRITICAL: use ctx.getPackageName() — must match applicationId exactly
             RemoteViews views = new RemoteViews(ctx.getPackageName(), R.layout.widget_layout);
 
             // Click whole widget → open ConfigActivity
             Intent cfgIntent = new Intent(ctx, WidgetConfigActivity.class);
             cfgIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             cfgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            // Use unique requestCode per widget so PendingIntents don't collide
             PendingIntent cfgPi = PendingIntent.getActivity(
                     ctx, appWidgetId, cfgIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -73,8 +73,13 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             for (int slot = 0; slot < 3; slot++) {
                 String key = Prefs.getSlot(ctx, appWidgetId, slot);
                 PriceItem item = PriceRegistry.get(key);
+
                 if (item == null) {
                     views.setTextViewText(priceIds[slot], "—");
+                    views.setTextViewText(nameIds[slot], "");
+                    views.setTextViewText(symIds[slot], "");
+                    views.setTextViewText(emojiIds[slot], "");
+                    views.setTextViewText(chgIds[slot], "");
                     continue;
                 }
 
@@ -97,9 +102,10 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                 views.setTextViewText(priceIds[slot], priceStr);
                 views.setTextViewText(chgIds[slot],   chgStr);
 
+                // FIX: Persian market convention — red = positive (gain), green = negative (loss)
                 int changeColor = change >= 0
-                        ? Color.parseColor("#E53935")
-                        : Color.parseColor("#43A047");
+                        ? Color.parseColor("#E53935")  // red = up
+                        : Color.parseColor("#43A047"); // green = down
                 views.setTextColor(chgIds[slot], changeColor);
             }
 
@@ -109,7 +115,10 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                 java.text.SimpleDateFormat sdf =
                         new java.text.SimpleDateFormat("HH:mm", java.util.Locale.US);
                 views.setTextViewText(R.id.update_time,
-                        sdf.format(new java.util.Date(cacheTime)));
+                        "آخرین: " + sdf.format(new java.util.Date(cacheTime)));
+            } else {
+                // FIX: show loading state so widget doesn't look broken before first fetch
+                views.setTextViewText(R.id.update_time, "در حال بارگذاری...");
             }
 
             mgr.updateAppWidget(appWidgetId, views);
@@ -145,7 +154,7 @@ public class PriceWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private static void triggerFetch(Context ctx) {
+    public static void triggerFetch(Context ctx) {
         try {
             Intent svc = new Intent(ctx, PriceUpdateService.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
