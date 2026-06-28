@@ -28,17 +28,9 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
-
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: ChandWidget-debug
           path: app/build/outputs/apk/debug/*.apk
-
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ChandWidget-release
-          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
