@@ -39,7 +39,7 @@ public class TgjuApi {
     // Keys that are served by the widget/tmp endpoint (by name field)
     private static final java.util.Set<String> WIDGET_CRYPTO_NAMES = new java.util.HashSet<>(
             java.util.Arrays.asList(
-                    "crypto-bitcoin", "crypto-ethereum", "crypto-binance-coin", "crypto-solana"
+                    "crypto-bitcoin", "crypto-ethereum", "crypto-binance-coin", "crypto-solana", "crypto-tether"
             )
     );
 

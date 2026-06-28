@@ -16,7 +16,6 @@ import com.saeed.chandwidget.data.PriceRegistry;
 import com.saeed.chandwidget.util.Formatter;
 import com.saeed.chandwidget.util.Prefs;
 
-/** 2×2 widget — shows ONE price large */
 public class PriceWidgetProviderSingle extends AppWidgetProvider {
     private static final String TAG = "WidgetSingle";
 
@@ -45,7 +44,6 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
             boolean persian = Prefs.isPersian(ctx);
             RemoteViews views = new RemoteViews(ctx.getPackageName(), R.layout.widget_layout_small);
 
-            // Click → open config
             Intent cfgIntent = new Intent(ctx, WidgetConfigActivity.class);
             cfgIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
             cfgIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -54,13 +52,12 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.widget_root, cfgPi);
 
-            // CRITICAL: explicitly set font sizes in Java so they survive RemoteViews re-render
-            // (XML textSize is ignored by Samsung launcher after the first updateAppWidget call)
-            views.setTextViewTextSize(R.id.emoji0, TypedValue.COMPLEX_UNIT_SP, 32);
-            views.setTextViewTextSize(R.id.name0,  TypedValue.COMPLEX_UNIT_SP, 16);
-            views.setTextViewTextSize(R.id.sym0,   TypedValue.COMPLEX_UNIT_SP, 12);
-            views.setTextViewTextSize(R.id.chg0,   TypedValue.COMPLEX_UNIT_SP, 18);
-            views.setTextViewTextSize(R.id.price0, TypedValue.COMPLEX_UNIT_SP, 36);
+            // Must set sizes in Java — Samsung launcher overrides XML textSize on each RemoteViews update
+            views.setTextViewTextSize(R.id.emoji0, TypedValue.COMPLEX_UNIT_SP, 34);
+            views.setTextViewTextSize(R.id.name0,  TypedValue.COMPLEX_UNIT_SP, 17);
+            views.setTextViewTextSize(R.id.sym0,   TypedValue.COMPLEX_UNIT_SP, 13);
+            views.setTextViewTextSize(R.id.chg0,   TypedValue.COMPLEX_UNIT_SP, 20);
+            views.setTextViewTextSize(R.id.price0, TypedValue.COMPLEX_UNIT_SP, 42);
 
             String key = Prefs.getSlot(ctx, appWidgetId, 0);
             PriceItem item = PriceRegistry.get(key);

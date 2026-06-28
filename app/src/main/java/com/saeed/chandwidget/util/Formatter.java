@@ -44,7 +44,7 @@ public class Formatter {
     /** e.g. 168.59M (میلیون تومان) */
     private static String formatGoldToman(double price, boolean persian) {
         double million = price / 1_000_000.0;
-        String suffix = persian ? "م.ت" : "M";
+        String suffix = persian ? " م.ت" : " M";
         if (million >= 1.0) {
             DecimalFormat df = new DecimalFormat("#,##0.00", persian ? FA : EN);
             return df.format(million) + suffix;
@@ -52,7 +52,7 @@ public class Formatter {
             // below 1M, show in thousands
             double thousand = price / 1000.0;
             DecimalFormat df = new DecimalFormat("#,##0.0", persian ? FA : EN);
-            return df.format(thousand) + (persian ? "ه.ت" : "K");
+            return df.format(thousand) + (persian ? " ه.ت" : " K");
         }
     }
 

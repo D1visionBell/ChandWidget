@@ -3,7 +3,7 @@
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="6dp"
+    android:padding="4dp"
     android:background="@android:color/transparent">
 
     <LinearLayout
@@ -22,9 +22,9 @@
 
             <TextView
                 android:id="@+id/emoji0"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:textSize="32sp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:textSize="34sp"
                 android:gravity="center"
                 android:text="🇺🇸" />
 
@@ -32,13 +32,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/name0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:maxLines="1"
@@ -48,49 +48,43 @@
                     android:id="@+id/sym0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     android:textColor="@color/text_secondary"
                     android:text="USD" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Spacer top -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="" />
+        <!-- Spacer -->
+        <TextView android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:text="" />
 
-        <!-- Change indicator -->
+        <!-- Change -->
         <TextView
             android:id="@+id/chg0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textColor="#E53935"
             android:layout_marginBottom="2dp"
             android:text="↑50" />
 
-        <!-- Big price — fills remaining space -->
+        <!-- Big price -->
         <TextView
             android:id="@+id/price0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="36sp"
+            android:textSize="42sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
             android:maxLines="1"
             android:ellipsize="end"
             android:text="59,750" />
 
-        <!-- Spacer bottom -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="" />
+        <!-- Spacer -->
+        <TextView android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:text="" />
 
-        <!-- Footer: Chand label -->
+        <!-- Footer -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,13 +93,7 @@
             android:gravity="end"
             android:textColor="@color/text_secondary" />
 
-        <!-- Hidden update_time -->
-        <TextView
-            android:id="@+id/update_time"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:text="" />
-
+        <TextView android:id="@+id/update_time" android:layout_width="0dp"
+            android:layout_height="0dp" android:visibility="gone" android:text="" />
     </LinearLayout>
 </LinearLayout>

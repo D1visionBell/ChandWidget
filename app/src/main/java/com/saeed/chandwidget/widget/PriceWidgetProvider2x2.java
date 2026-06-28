@@ -16,7 +16,6 @@ import com.saeed.chandwidget.data.PriceRegistry;
 import com.saeed.chandwidget.util.Formatter;
 import com.saeed.chandwidget.util.Prefs;
 
-/** 2×2 widget — shows 3 prices compact */
 public class PriceWidgetProvider2x2 extends AppWidgetProvider {
     private static final String TAG = "Widget2x2";
 
@@ -58,12 +57,12 @@ public class PriceWidgetProvider2x2 extends AppWidgetProvider {
             int[] chgIds   = {R.id.chg0,   R.id.chg1,   R.id.chg2};
             int[] priceIds = {R.id.price0, R.id.price1, R.id.price2};
 
-            // CRITICAL: set sizes in Java to prevent Samsung launcher from shrinking them
+            // Must set sizes in Java — Samsung launcher overrides XML textSize on RemoteViews update
             for (int i = 0; i < 3; i++) {
-                views.setTextViewTextSize(emojiIds[i], TypedValue.COMPLEX_UNIT_SP, 20);
-                views.setTextViewTextSize(symIds[i],   TypedValue.COMPLEX_UNIT_SP, 14);
-                views.setTextViewTextSize(chgIds[i],   TypedValue.COMPLEX_UNIT_SP, 12);
-                views.setTextViewTextSize(priceIds[i], TypedValue.COMPLEX_UNIT_SP, 19);
+                views.setTextViewTextSize(emojiIds[i], TypedValue.COMPLEX_UNIT_SP, 22);
+                views.setTextViewTextSize(symIds[i],   TypedValue.COMPLEX_UNIT_SP, 16);
+                views.setTextViewTextSize(chgIds[i],   TypedValue.COMPLEX_UNIT_SP, 13);
+                views.setTextViewTextSize(priceIds[i], TypedValue.COMPLEX_UNIT_SP, 22);
             }
 
             for (int slot = 0; slot < 3; slot++) {
@@ -80,7 +79,9 @@ public class PriceWidgetProvider2x2 extends AppWidgetProvider {
                 double price  = Prefs.getCachedPrice(ctx, key);
                 double change = Prefs.getCachedChange(ctx, key);
 
-                String symStr   = persian ? item.getSymbolFa() : item.getSymbolEn();
+                // Always use English symbol in 3-row compact widget — prevents
+                // long Farsi names like "نیم سکه" from squeezing against the price
+                String symStr   = item.getSymbolEn();
                 String priceStr = Formatter.formatPrice(price, item.getType(), persian);
                 String chgStr   = Formatter.formatChange(change, item.getType(), persian);
 

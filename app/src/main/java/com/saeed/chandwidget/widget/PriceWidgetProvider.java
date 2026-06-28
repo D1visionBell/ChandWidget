@@ -74,11 +74,11 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             int[] chgIds2   = {R.id.chg0,   R.id.chg1,   R.id.chg2};
             int[] priceIds2 = {R.id.price0, R.id.price1, R.id.price2};
             for (int i = 0; i < 3; i++) {
-                views.setTextViewTextSize(emojiIds2[i], TypedValue.COMPLEX_UNIT_SP, 20);
-                views.setTextViewTextSize(nameIds2[i],  TypedValue.COMPLEX_UNIT_SP, 15);
+                views.setTextViewTextSize(emojiIds2[i], TypedValue.COMPLEX_UNIT_SP, 22);
+                views.setTextViewTextSize(nameIds2[i],  TypedValue.COMPLEX_UNIT_SP, 17);
                 views.setTextViewTextSize(symIds2[i],   TypedValue.COMPLEX_UNIT_SP, 13);
                 views.setTextViewTextSize(chgIds2[i],   TypedValue.COMPLEX_UNIT_SP, 13);
-                views.setTextViewTextSize(priceIds2[i], TypedValue.COMPLEX_UNIT_SP, 20);
+                views.setTextViewTextSize(priceIds2[i], TypedValue.COMPLEX_UNIT_SP, 24);
             }
             for (int slot = 0; slot < 3; slot++) {
                 String key = Prefs.getSlot(ctx, appWidgetId, slot);
