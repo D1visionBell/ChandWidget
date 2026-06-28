@@ -68,6 +68,14 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.widget_root, cfgPi);
 
+            // Refresh button — broadcasts ACTION_MANUAL_REFRESH which IS allowed to start FGS
+            Intent refreshIntent = new Intent(ctx, PriceWidgetProvider.class);
+            refreshIntent.setAction(ACTION_MANUAL_REFRESH);
+            PendingIntent refreshPi = PendingIntent.getBroadcast(
+                    ctx, appWidgetId + 1000, refreshIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            views.setOnClickPendingIntent(R.id.btn_refresh, refreshPi);
+
             int[] nameIds  = {R.id.name0,  R.id.name1,  R.id.name2};
             int[] symIds   = {R.id.sym0,   R.id.sym1,   R.id.sym2};
             int[] emojiIds = {R.id.emoji0, R.id.emoji1, R.id.emoji2};
