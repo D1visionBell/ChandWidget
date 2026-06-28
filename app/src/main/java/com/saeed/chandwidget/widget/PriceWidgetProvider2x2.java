@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 import com.saeed.chandwidget.R;
 import com.saeed.chandwidget.config.WidgetConfigActivity;
@@ -57,11 +58,22 @@ public class PriceWidgetProvider2x2 extends AppWidgetProvider {
             int[] chgIds   = {R.id.chg0,   R.id.chg1,   R.id.chg2};
             int[] priceIds = {R.id.price0, R.id.price1, R.id.price2};
 
+            // CRITICAL: set sizes in Java to prevent Samsung launcher from shrinking them
+            for (int i = 0; i < 3; i++) {
+                views.setTextViewTextSize(emojiIds[i], TypedValue.COMPLEX_UNIT_SP, 20);
+                views.setTextViewTextSize(symIds[i],   TypedValue.COMPLEX_UNIT_SP, 14);
+                views.setTextViewTextSize(chgIds[i],   TypedValue.COMPLEX_UNIT_SP, 12);
+                views.setTextViewTextSize(priceIds[i], TypedValue.COMPLEX_UNIT_SP, 19);
+            }
+
             for (int slot = 0; slot < 3; slot++) {
                 String key = Prefs.getSlot(ctx, appWidgetId, slot);
                 PriceItem item = PriceRegistry.get(key);
                 if (item == null) {
                     views.setTextViewText(priceIds[slot], "—");
+                    views.setTextViewText(symIds[slot],   "");
+                    views.setTextViewText(emojiIds[slot], "");
+                    views.setTextViewText(chgIds[slot],   "");
                     continue;
                 }
 

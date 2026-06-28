@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 2x2 widget — single price, large display. Space tag NOT used (banned in RemoteViews on Samsung). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="12dp"
+        android:padding="14dp"
         android:background="@drawable/card_bg">
 
         <!-- Top row: emoji + name/symbol -->
@@ -23,9 +22,9 @@
 
             <TextView
                 android:id="@+id/emoji0"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:textSize="24sp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:textSize="32sp"
                 android:gravity="center"
                 android:text="🇺🇸" />
 
@@ -39,7 +38,7 @@
                     android:id="@+id/name0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:maxLines="1"
@@ -49,13 +48,13 @@
                     android:id="@+id/sym0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textColor="@color/text_secondary"
                     android:text="USD" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Spacer: use layout_weight on an empty TextView instead of Space -->
+        <!-- Spacer top -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -67,17 +66,17 @@
             android:id="@+id/chg0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
+            android:textSize="18sp"
             android:textColor="#E53935"
             android:layout_marginBottom="2dp"
             android:text="↑50" />
 
-        <!-- Big price -->
+        <!-- Big price — fills remaining space -->
         <TextView
             android:id="@+id/price0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="26sp"
+            android:textSize="36sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
             android:maxLines="1"
@@ -96,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Chand"
-            android:textSize="9sp"
+            android:textSize="10sp"
             android:gravity="end"
             android:textColor="@color/text_secondary" />
 

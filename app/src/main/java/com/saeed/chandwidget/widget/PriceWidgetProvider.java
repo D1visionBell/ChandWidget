@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 import com.saeed.chandwidget.R;
 import com.saeed.chandwidget.config.WidgetConfigActivity;
@@ -65,6 +66,20 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             int[] chgIds   = {R.id.chg0,   R.id.chg1,   R.id.chg2};
             int[] priceIds = {R.id.price0, R.id.price1, R.id.price2};
 
+
+            // CRITICAL: set sizes in Java — Samsung launcher overrides XML textSize on update
+            int[] nameIds2  = {R.id.name0,  R.id.name1,  R.id.name2};
+            int[] symIds2   = {R.id.sym0,   R.id.sym1,   R.id.sym2};
+            int[] emojiIds2 = {R.id.emoji0, R.id.emoji1, R.id.emoji2};
+            int[] chgIds2   = {R.id.chg0,   R.id.chg1,   R.id.chg2};
+            int[] priceIds2 = {R.id.price0, R.id.price1, R.id.price2};
+            for (int i = 0; i < 3; i++) {
+                views.setTextViewTextSize(emojiIds2[i], TypedValue.COMPLEX_UNIT_SP, 20);
+                views.setTextViewTextSize(nameIds2[i],  TypedValue.COMPLEX_UNIT_SP, 15);
+                views.setTextViewTextSize(symIds2[i],   TypedValue.COMPLEX_UNIT_SP, 13);
+                views.setTextViewTextSize(chgIds2[i],   TypedValue.COMPLEX_UNIT_SP, 13);
+                views.setTextViewTextSize(priceIds2[i], TypedValue.COMPLEX_UNIT_SP, 20);
+            }
             for (int slot = 0; slot < 3; slot++) {
                 String key = Prefs.getSlot(ctx, appWidgetId, slot);
                 PriceItem item = PriceRegistry.get(key);

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 2x2 widget — 3 price rows compact layout. No Space tag (banned on Samsung RemoteViews). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:padding="12dp"
         android:background="@drawable/card_bg">
 
         <!-- Row 0 -->
@@ -24,9 +23,9 @@
 
             <TextView
                 android:id="@+id/emoji0"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:textSize="16sp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:text="🇺🇸" />
 
@@ -35,9 +34,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:textSize="11sp"
-                android:textColor="@color/text_secondary"
+                android:layout_marginStart="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
                 android:text="USD" />
 
             <LinearLayout
@@ -49,7 +49,7 @@
                     android:id="@+id/chg0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textColor="#E53935"
                     android:gravity="end"
                     android:text="--" />
@@ -57,7 +57,7 @@
                     android:id="@+id/price0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="19sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:gravity="end"
@@ -65,8 +65,8 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView android:layout_width="match_parent" android:layout_height="0.5dp"
-            android:background="#1A000000" android:text="" />
+        <TextView android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#15000000" android:text="" />
 
         <!-- Row 1 -->
         <LinearLayout
@@ -78,9 +78,9 @@
 
             <TextView
                 android:id="@+id/emoji1"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:textSize="16sp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:text="🇪🇺" />
 
@@ -89,9 +89,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:textSize="11sp"
-                android:textColor="@color/text_secondary"
+                android:layout_marginStart="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
                 android:text="EUR" />
 
             <LinearLayout
@@ -103,7 +104,7 @@
                     android:id="@+id/chg1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textColor="#E53935"
                     android:gravity="end"
                     android:text="--" />
@@ -111,7 +112,7 @@
                     android:id="@+id/price1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="19sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:gravity="end"
@@ -119,8 +120,8 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView android:layout_width="match_parent" android:layout_height="0.5dp"
-            android:background="#1A000000" android:text="" />
+        <TextView android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#15000000" android:text="" />
 
         <!-- Row 2 -->
         <LinearLayout
@@ -132,9 +133,9 @@
 
             <TextView
                 android:id="@+id/emoji2"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:textSize="16sp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:text="🥇" />
 
@@ -143,9 +144,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:textSize="11sp"
-                android:textColor="@color/text_secondary"
+                android:layout_marginStart="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
                 android:text="GOLD" />
 
             <LinearLayout
@@ -157,7 +159,7 @@
                     android:id="@+id/chg2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textColor="#E53935"
                     android:gravity="end"
                     android:text="--" />
@@ -165,7 +167,7 @@
                     android:id="@+id/price2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="19sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:gravity="end"

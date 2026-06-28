@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 import com.saeed.chandwidget.R;
 import com.saeed.chandwidget.config.WidgetConfigActivity;
@@ -53,11 +54,23 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.widget_root, cfgPi);
 
+            // CRITICAL: explicitly set font sizes in Java so they survive RemoteViews re-render
+            // (XML textSize is ignored by Samsung launcher after the first updateAppWidget call)
+            views.setTextViewTextSize(R.id.emoji0, TypedValue.COMPLEX_UNIT_SP, 32);
+            views.setTextViewTextSize(R.id.name0,  TypedValue.COMPLEX_UNIT_SP, 16);
+            views.setTextViewTextSize(R.id.sym0,   TypedValue.COMPLEX_UNIT_SP, 12);
+            views.setTextViewTextSize(R.id.chg0,   TypedValue.COMPLEX_UNIT_SP, 18);
+            views.setTextViewTextSize(R.id.price0, TypedValue.COMPLEX_UNIT_SP, 36);
+
             String key = Prefs.getSlot(ctx, appWidgetId, 0);
             PriceItem item = PriceRegistry.get(key);
 
             if (item == null) {
                 views.setTextViewText(R.id.price0, "—");
+                views.setTextViewText(R.id.name0,  "");
+                views.setTextViewText(R.id.sym0,   "");
+                views.setTextViewText(R.id.emoji0, "");
+                views.setTextViewText(R.id.chg0,   "");
                 mgr.updateAppWidget(appWidgetId, views);
                 return;
             }
