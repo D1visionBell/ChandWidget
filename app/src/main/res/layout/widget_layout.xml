@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Single-card widget — one rounded card with 3 price rows + header.
-    Matches Chand iOS app layout.
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -10,7 +6,6 @@
     android:padding="6dp"
     android:background="@android:color/transparent">
 
-    <!-- Single card containing everything -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +13,7 @@
         android:padding="12dp"
         android:background="@drawable/card_bg">
 
-        <!-- Header row: app name + last update time -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,14 +38,6 @@
                 android:textColor="@color/text_secondary"
                 android:text="--:--" />
         </LinearLayout>
-
-        <!-- Thin divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_secondary"
-            android:alpha="0.3"
-            android:layout_marginBottom="4dp"/>
 
         <!-- Row 0 -->
         <LinearLayout
@@ -119,14 +106,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_secondary"
-            android:alpha="0.2"
-            android:layout_marginStart="28dp"/>
-
         <!-- Row 1 -->
         <LinearLayout
             android:id="@+id/card1"
@@ -193,14 +172,6 @@
                     android:text="---" />
             </LinearLayout>
         </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_secondary"
-            android:alpha="0.2"
-            android:layout_marginStart="28dp"/>
 
         <!-- Row 2 -->
         <LinearLayout

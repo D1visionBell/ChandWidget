@@ -31,8 +31,10 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             updateWidget(ctx, mgr, id);
         }
         scheduleAlarm(ctx);
-        // Fetch fresh data every time system calls onUpdate
-        triggerFetch(ctx);
+        // FIX: Do NOT call triggerFetch() here.
+        // onUpdate is called by the system (not user interaction), so Android 12+
+        // blocks startForegroundService() with ForegroundServiceStartNotAllowedException.
+        // Fetching is handled by the alarm (scheduleAlarm) and by BOOT_COMPLETED.
     }
 
     @Override
@@ -44,6 +46,8 @@ public class PriceWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context ctx, Intent intent) {
         super.onReceive(ctx, intent);
         String action = intent.getAction();
+        // ACTION_MANUAL_REFRESH and BOOT_COMPLETED are user/system events where
+        // startForegroundService IS allowed.
         if (ACTION_MANUAL_REFRESH.equals(action)
                 || Intent.ACTION_BOOT_COMPLETED.equals(action)) {
             triggerFetch(ctx);
@@ -55,19 +59,12 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             boolean persian = Prefs.isPersian(ctx);
             RemoteViews views = new RemoteViews(ctx.getPackageName(), R.layout.widget_layout);
 
-            // FIX: Click on widget opens Config Activity.
-            // Must use explicit component + correct flags so it works from home screen context.
             Intent cfgIntent = new Intent(ctx, WidgetConfigActivity.class);
             cfgIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
             cfgIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            // FLAG_ACTIVITY_NEW_TASK is required when starting from a non-Activity context (widget)
-            // FLAG_ACTIVITY_CLEAR_TOP prevents stacking multiple instances
             cfgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            // Each widget needs a unique requestCode or PendingIntents collide and deliver wrong ID
             PendingIntent cfgPi = PendingIntent.getActivity(
-                    ctx,
-                    appWidgetId,           // unique per widget
-                    cfgIntent,
+                    ctx, appWidgetId, cfgIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.widget_root, cfgPi);
 
