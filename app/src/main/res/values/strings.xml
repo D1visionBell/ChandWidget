@@ -15,6 +15,12 @@
     <string name="lang_label">Language / زبان</string>
     <string name="slot_label">انتخاب آیتم‌ها</string>
     <string name="btn_save">ذخیره</string>
+    <string name="btn_refresh">بروزرسانی</string>
+    <string name="loading">در حال بارگذاری…</string>
+    <string name="section_widget">تنظیمات ویجت</string>
+    <string name="widget_size_triple">3 قیمت</string>
+    <string name="multi_row_label">نمایش 3 ردیف (2×2)</string>
+    <string name="multi_row_desc">به جای یک قیمت بزرگ، 3 قیمت کوچک نمایش داده می‌شود</string>
     <!-- Legacy (kept for safety) -->
     <string name="widget_label">Chand Widget</string>
     <string name="widget_label_small">Chand Widget Small</string>
