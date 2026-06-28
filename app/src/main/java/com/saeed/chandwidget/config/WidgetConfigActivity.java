@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,15 +24,15 @@ public class WidgetConfigActivity extends AppCompatActivity {
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private final Spinner[] spinners = new Spinner[3];
-    private SwitchCompat langSwitch;  // FIX: SwitchCompat instead of deprecated Switch
+    private SwitchCompat langSwitch;
     private List<PriceItem> itemList;
+    private PriceAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
@@ -52,34 +52,46 @@ public class WidgetConfigActivity extends AppCompatActivity {
         spinners[2] = findViewById(R.id.spinner2);
         langSwitch  = findViewById(R.id.lang_switch);
 
-        PriceAdapter adapter = new PriceAdapter(itemList);
+        // Single adapter instance shared across all spinners
+        adapter = new PriceAdapter();
         for (int i = 0; i < 3; i++) {
-            spinners[i].setAdapter(adapter);
-            // FIX: use per-instance slot key
-            String currentKey = Prefs.getSlot(this, appWidgetId, i);
-            for (int j = 0; j < itemList.size(); j++) {
-                if (itemList.get(j).getKey().equals(currentKey)) {
-                    spinners[i].setSelection(j);
-                    break;
-                }
-            }
+            // Each spinner needs its own adapter instance to avoid selection conflicts
+            spinners[i].setAdapter(new PriceAdapter());
+            selectCurrentSlot(i);
         }
 
         langSwitch.setChecked(Prefs.isPersian(this));
+
+        // Refresh adapter labels when language is toggled
+        langSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
+            Prefs.setLanguage(this, isChecked);
+            for (Spinner s : spinners) {
+                ((PriceAdapter) s.getAdapter()).notifyDataSetChanged();
+            }
+        });
+
         findViewById(R.id.btn_save).setOnClickListener(v -> save());
+    }
+
+    private void selectCurrentSlot(int slotIndex) {
+        String currentKey = Prefs.getSlot(this, appWidgetId, slotIndex);
+        for (int j = 0; j < itemList.size(); j++) {
+            if (itemList.get(j).getKey().equals(currentKey)) {
+                spinners[slotIndex].setSelection(j);
+                return;
+            }
+        }
     }
 
     private void save() {
         for (int i = 0; i < 3; i++) {
-            PriceItem selected = (PriceItem) spinners[i].getSelectedItem();
-            if (selected != null) {
-                // FIX: save with per-instance appWidgetId
-                Prefs.setSlot(this, appWidgetId, i, selected.getKey());
+            int pos = spinners[i].getSelectedItemPosition();
+            if (pos >= 0 && pos < itemList.size()) {
+                Prefs.setSlot(this, appWidgetId, i, itemList.get(pos).getKey());
             }
         }
         Prefs.setLanguage(this, langSwitch.isChecked());
 
-        // Trigger fetch
         Intent svc = new Intent(this, PriceUpdateService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(svc);
@@ -87,7 +99,6 @@ public class WidgetConfigActivity extends AppCompatActivity {
             startService(svc);
         }
 
-        // Update this widget immediately from cache
         AppWidgetManager mgr = AppWidgetManager.getInstance(this);
         PriceWidgetProvider.updateWidget(this, mgr, appWidgetId);
 
@@ -97,30 +108,29 @@ public class WidgetConfigActivity extends AppCompatActivity {
         finish();
     }
 
-    private class PriceAdapter extends ArrayAdapter<PriceItem> {
-        private final List<PriceItem> items;
+    // Use BaseAdapter directly to avoid ArrayAdapter's internal list conflicts
+    private class PriceAdapter extends BaseAdapter {
 
-        PriceAdapter(List<PriceItem> items) {
-            super(WidgetConfigActivity.this, R.layout.item_price_selector, items);
-            this.items = items;
-        }
+        @Override public int getCount()              { return itemList.size(); }
+        @Override public Object getItem(int pos)     { return itemList.get(pos); }
+        @Override public long getItemId(int pos)     { return pos; }
 
         @Override
         public View getView(int pos, View convertView, ViewGroup parent) {
-            return createView(pos, convertView, parent);
+            return buildView(pos, convertView, parent, false);
         }
 
         @Override
         public View getDropDownView(int pos, View convertView, ViewGroup parent) {
-            return createView(pos, convertView, parent);
+            return buildView(pos, convertView, parent, true);
         }
 
-        private View createView(int pos, View convertView, ViewGroup parent) {
+        private View buildView(int pos, View convertView, ViewGroup parent, boolean dropdown) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
+                convertView = LayoutInflater.from(WidgetConfigActivity.this)
                         .inflate(R.layout.item_price_selector, parent, false);
             }
-            PriceItem item = items.get(pos);
+            PriceItem item = itemList.get(pos);
             TextView tvEmoji = convertView.findViewById(R.id.item_emoji);
             TextView tvName  = convertView.findViewById(R.id.item_name);
             TextView tvSym   = convertView.findViewById(R.id.item_symbol);
