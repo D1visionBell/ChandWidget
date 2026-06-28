@@ -13,20 +13,21 @@
         android:padding="10dp"
         android:background="@drawable/card_bg">
 
-        <!-- ردیف ۰ — always LTR: [emoji+sym] [name ...] [chg+price] -->
+        <!-- Row 0: always LTR order: [emoji+sym] [name] [chg+price] -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layoutDirection="ltr">
+            android:layoutDirection="ltr"
+            android:gravity="center_vertical">
 
             <LinearLayout
-                android:layout_width="36dp"
+                android:layout_width="38dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:layoutDirection="ltr">
                 <TextView
                     android:id="@+id/emoji0"
                     android:layout_width="28dp"
@@ -42,10 +43,12 @@
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:gravity="center"
+                    android:textDirection="ltr"
                     android:maxLines="1"
                     android:text="USD" />
             </LinearLayout>
 
+            <!-- name: weight=1 fills middle, gravity=start keeps it left-aligned -->
             <TextView
                 android:id="@+id/name0"
                 android:layout_width="0dp"
@@ -58,13 +61,16 @@
                 android:textColor="@color/text_primary"
                 android:maxLines="1"
                 android:ellipsize="end"
+                android:gravity="start"
+                android:textAlignment="gravity"
                 android:text="US Dollar" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="end">
+                android:gravity="end"
+                android:layoutDirection="ltr">
                 <TextView
                     android:id="@+id/chg0"
                     android:layout_width="wrap_content"
@@ -72,6 +78,7 @@
                     android:textSize="11sp"
                     android:textColor="#E53935"
                     android:gravity="end"
+                    android:textDirection="ltr"
                     android:text="--" />
                 <TextView
                     android:id="@+id/price0"
@@ -81,6 +88,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:gravity="end"
+                    android:textDirection="ltr"
                     android:maxLines="1"
                     android:text="---" />
             </LinearLayout>
@@ -89,20 +97,21 @@
         <TextView android:layout_width="match_parent" android:layout_height="1dp"
             android:background="#1A000000" android:text="" />
 
-        <!-- ردیف ۱ -->
+        <!-- Row 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layoutDirection="ltr">
+            android:layoutDirection="ltr"
+            android:gravity="center_vertical">
 
             <LinearLayout
-                android:layout_width="36dp"
+                android:layout_width="38dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:layoutDirection="ltr">
                 <TextView
                     android:id="@+id/emoji1"
                     android:layout_width="28dp"
@@ -118,6 +127,7 @@
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:gravity="center"
+                    android:textDirection="ltr"
                     android:maxLines="1"
                     android:text="EUR" />
             </LinearLayout>
@@ -134,13 +144,16 @@
                 android:textColor="@color/text_primary"
                 android:maxLines="1"
                 android:ellipsize="end"
+                android:gravity="start"
+                android:textAlignment="gravity"
                 android:text="Euro" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="end">
+                android:gravity="end"
+                android:layoutDirection="ltr">
                 <TextView
                     android:id="@+id/chg1"
                     android:layout_width="wrap_content"
@@ -148,6 +161,7 @@
                     android:textSize="11sp"
                     android:textColor="#E53935"
                     android:gravity="end"
+                    android:textDirection="ltr"
                     android:text="--" />
                 <TextView
                     android:id="@+id/price1"
@@ -157,6 +171,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:gravity="end"
+                    android:textDirection="ltr"
                     android:maxLines="1"
                     android:text="---" />
             </LinearLayout>
@@ -165,20 +180,21 @@
         <TextView android:layout_width="match_parent" android:layout_height="1dp"
             android:background="#1A000000" android:text="" />
 
-        <!-- ردیف ۲ -->
+        <!-- Row 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layoutDirection="ltr">
+            android:layoutDirection="ltr"
+            android:gravity="center_vertical">
 
             <LinearLayout
-                android:layout_width="36dp"
+                android:layout_width="38dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:layoutDirection="ltr">
                 <TextView
                     android:id="@+id/emoji2"
                     android:layout_width="28dp"
@@ -194,6 +210,7 @@
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:gravity="center"
+                    android:textDirection="ltr"
                     android:maxLines="1"
                     android:text="GOLD" />
             </LinearLayout>
@@ -210,13 +227,16 @@
                 android:textColor="@color/text_primary"
                 android:maxLines="1"
                 android:ellipsize="end"
+                android:gravity="start"
+                android:textAlignment="gravity"
                 android:text="Gold 18K" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="end">
+                android:gravity="end"
+                android:layoutDirection="ltr">
                 <TextView
                     android:id="@+id/chg2"
                     android:layout_width="wrap_content"
@@ -224,6 +244,7 @@
                     android:textSize="11sp"
                     android:textColor="#E53935"
                     android:gravity="end"
+                    android:textDirection="ltr"
                     android:text="--" />
                 <TextView
                     android:id="@+id/price2"
@@ -233,6 +254,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:gravity="end"
+                    android:textDirection="ltr"
                     android:maxLines="1"
                     android:text="---" />
             </LinearLayout>
