@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="180dp"
+    android:minHeight="180dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="0"
+    android:configure="com.saeed.chandwidget.config.WidgetConfigActivity"
+    android:initialLayout="@layout/widget_layout"
+    android:widgetCategory="home_screen"
+    android:resizeMode="none"
+    android:description="@string/widget_description" />
