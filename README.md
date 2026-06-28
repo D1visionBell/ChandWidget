@@ -57,30 +57,4 @@
 
 ## منبع داده
 
-قیمت‌ها از [TGJU.org](https://tgju.org) دریافت می‌شن.
-
----
-
-## نصب
-
-APK رو از بخش [Releases](../../releases) دانلود و روی گوشی نصب کن. بعد از نصب، ویجت مورد نظر رو از منوی ویجت‌های گوشی به صفحه اصلی اضافه کن.
-
----
-
-## Build از سورس
-
-```bash
-git clone https://github.com/your-username/ChandWidget.git
-cd ChandWidget
-./gradlew assembleDebug
-```
-
-APK در مسیر `app/build/outputs/apk/debug/` قرار می‌گیره.
-
-**پیش‌نیازها:** Android SDK · Java 17 · Gradle 8.11+
-
----
-
-## مجوز
-
-MIT License
+قیمت‌ها از [TGJU.org](https://tgju.org) دریافت می‌شوند.
