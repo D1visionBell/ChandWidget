@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="14dp"
+        android:background="@drawable/card_bg">
+
+        <!-- Header: emoji چپ + نام/sym راست -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/emoji0"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:text="🇺🇸" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/name0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="US Dollar" />
+                <TextView
+                    android:id="@+id/sym0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:text="USD" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Flexible spacer -->
+        <TextView android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:text="" />
+
+        <!-- تغییر قیمت -->
+        <TextView
+            android:id="@+id/chg0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#E53935"
+            android:layout_marginBottom="2dp"
+            android:text="↑50" />
+
+        <!-- قیمت درشت — کوچک‌تر تا کامل نمایش داده بشه -->
+        <TextView
+            android:id="@+id/price0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="59,750" />
+
+        <TextView android:id="@+id/update_time" android:layout_width="0dp"
+            android:layout_height="0dp" android:visibility="gone" android:text="" />
+    </LinearLayout>
+</LinearLayout>
