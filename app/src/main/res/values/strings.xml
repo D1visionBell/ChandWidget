@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chand</string>
+    <string name="widget_label">Chand Price Widget</string>
+    <string name="widget_description">Live Iranian market prices</string>
+    <string name="config_title">Chand Widget</string>
+    <string name="config_subtitle">Choose 3 prices to display</string>
+    <string name="lang_label">Language / زبان</string>
+    <string name="slot_label">Select items to show</string>
+    <string name="btn_save">Add Widget</string>
+</resources>
