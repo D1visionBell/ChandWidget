@@ -66,7 +66,7 @@ public class PriceUpdateService extends Service {
         }
 
         // Small widgets
-        ComponentName cnSmall = new ComponentName(this, PriceWidgetProviderSmall.class);
+        ComponentName cnSmall = new ComponentName(this, PriceWidgetProviderSingle.class);
         int[] smallIds = mgr.getAppWidgetIds(cnSmall);
         for (int widgetId : smallIds) {
             for (int slot = 0; slot < 3; slot++) {

@@ -26,7 +26,7 @@ import com.saeed.chandwidget.util.Formatter;
 import com.saeed.chandwidget.util.Prefs;
 import com.saeed.chandwidget.widget.PriceUpdateService;
 import com.saeed.chandwidget.widget.PriceWidgetProvider;
-import com.saeed.chandwidget.widget.PriceWidgetProviderSmall;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +66,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
                 appWidgetId = ids[0];
             } else {
                 android.content.ComponentName cnSmall = new android.content.ComponentName(
-                        this, PriceWidgetProviderSmall.class);
+                        this, PriceWidgetProviderSingle.class);
                 int[] smallIds = mgr.getAppWidgetIds(cnSmall);
                 if (smallIds != null && smallIds.length > 0) {
                     appWidgetId = smallIds[0];
@@ -383,9 +383,9 @@ public class WidgetConfigActivity extends AppCompatActivity {
 
         AppWidgetManager mgr = AppWidgetManager.getInstance(this);
         if (small) {
-            PriceWidgetProviderSmall.updateSmallWidget(this, mgr, appWidgetId);
+            PriceWidgetProviderSingle.update(this, mgr, appWidgetId);
         } else {
-            PriceWidgetProvider.updateWidget(this, mgr, appWidgetId);
+            PriceWidgetProvider.update(this, mgr, appWidgetId);
         }
 
         if (isNewWidget) {
