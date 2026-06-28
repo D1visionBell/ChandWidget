@@ -13,64 +13,71 @@
         android:padding="10dp"
         android:background="@drawable/card_bg">
 
-        <!-- Row 0: always LTR order: [emoji+sym] [name] [chg+price] -->
+        <!-- ردیف ۰: ستون چپ (emoji+نام) | ستون راست (تغییر+قیمت) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:layoutDirection="ltr"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layoutDirection="ltr">
 
+            <!-- ستون چپ: emoji بالا، نام پایین — عرض ثابت -->
             <LinearLayout
-                android:layout_width="38dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
+                android:gravity="start"
                 android:layoutDirection="ltr">
+
                 <TextView
                     android:id="@+id/emoji0"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:textSize="20sp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textSize="22sp"
                     android:gravity="center"
                     android:text="🇺🇸" />
+
+                <!-- sym مخفی — هنوز باید در layout باشه تا کد Java کرش نکنه -->
                 <TextView
                     android:id="@+id/sym0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="9sp"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textDirection="ltr"
-                    android:maxLines="1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
                     android:text="USD" />
+
+                <!-- نام نماد زیر آیکون -->
+                <TextView
+                    android:id="@+id/name0"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:textAlignment="gravity"
+                    android:textDirection="firstStrong"
+                    android:lineSpacingMultiplier="0.9"
+                    android:text="US Dollar" />
             </LinearLayout>
 
-            <!-- name: weight=1 fills middle, gravity=start keeps it left-aligned -->
+            <!-- فاصله کشسان -->
             <TextView
-                android:id="@+id/name0"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:textAlignment="gravity"
-                android:text="US Dollar" />
+                android:text="" />
 
+            <!-- ستون راست: تغییر + قیمت -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="end"
                 android:layoutDirection="ltr">
+
                 <TextView
                     android:id="@+id/chg0"
                     android:layout_width="wrap_content"
@@ -80,6 +87,7 @@
                     android:gravity="end"
                     android:textDirection="ltr"
                     android:text="--" />
+
                 <TextView
                     android:id="@+id/price0"
                     android:layout_width="wrap_content"
@@ -97,56 +105,58 @@
         <TextView android:layout_width="match_parent" android:layout_height="1dp"
             android:background="#1A000000" android:text="" />
 
-        <!-- Row 1 -->
+        <!-- ردیف ۱ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:layoutDirection="ltr"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layoutDirection="ltr">
 
             <LinearLayout
-                android:layout_width="38dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
+                android:gravity="start"
                 android:layoutDirection="ltr">
+
                 <TextView
                     android:id="@+id/emoji1"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:textSize="20sp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textSize="22sp"
                     android:gravity="center"
                     android:text="🇪🇺" />
+
                 <TextView
                     android:id="@+id/sym1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="9sp"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textDirection="ltr"
-                    android:maxLines="1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
                     android:text="EUR" />
+
+                <TextView
+                    android:id="@+id/name1"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:textAlignment="gravity"
+                    android:textDirection="firstStrong"
+                    android:lineSpacingMultiplier="0.9"
+                    android:text="Euro" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/name1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:textAlignment="gravity"
-                android:text="Euro" />
+                android:text="" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -154,6 +164,7 @@
                 android:orientation="vertical"
                 android:gravity="end"
                 android:layoutDirection="ltr">
+
                 <TextView
                     android:id="@+id/chg1"
                     android:layout_width="wrap_content"
@@ -163,6 +174,7 @@
                     android:gravity="end"
                     android:textDirection="ltr"
                     android:text="--" />
+
                 <TextView
                     android:id="@+id/price1"
                     android:layout_width="wrap_content"
@@ -180,56 +192,58 @@
         <TextView android:layout_width="match_parent" android:layout_height="1dp"
             android:background="#1A000000" android:text="" />
 
-        <!-- Row 2 -->
+        <!-- ردیف ۲ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:layoutDirection="ltr"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layoutDirection="ltr">
 
             <LinearLayout
-                android:layout_width="38dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
+                android:gravity="start"
                 android:layoutDirection="ltr">
+
                 <TextView
                     android:id="@+id/emoji2"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:textSize="20sp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textSize="22sp"
                     android:gravity="center"
                     android:text="🥇" />
+
                 <TextView
                     android:id="@+id/sym2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="9sp"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textDirection="ltr"
-                    android:maxLines="1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
                     android:text="GOLD" />
+
+                <TextView
+                    android:id="@+id/name2"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:textAlignment="gravity"
+                    android:textDirection="firstStrong"
+                    android:lineSpacingMultiplier="0.9"
+                    android:text="Gold 18K" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/name2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:textAlignment="gravity"
-                android:text="Gold 18K" />
+                android:text="" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -237,6 +251,7 @@
                 android:orientation="vertical"
                 android:gravity="end"
                 android:layoutDirection="ltr">
+
                 <TextView
                     android:id="@+id/chg2"
                     android:layout_width="wrap_content"
@@ -246,6 +261,7 @@
                     android:gravity="end"
                     android:textDirection="ltr"
                     android:text="--" />
+
                 <TextView
                     android:id="@+id/price2"
                     android:layout_width="wrap_content"
