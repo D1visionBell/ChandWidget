@@ -10,100 +10,203 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="14dp"
+        android:padding="8dp"
         android:background="@drawable/card_bg">
 
-        <!-- Row 0 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
-            android:layout_weight="1" android:orientation="horizontal"
+        <!-- ردیف ۰ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <TextView android:id="@+id/emoji0" android:layout_width="32dp"
-                android:layout_height="32dp" android:textSize="22sp"
-                android:gravity="center" android:text="🇺🇸" />
+            <!-- emoji بالای sym -->
+            <LinearLayout
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/emoji0"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="🇺🇸" />
+                <TextView
+                    android:id="@+id/sym0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:text="USD" />
+            </LinearLayout>
 
-            <TextView android:id="@+id/sym0" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginStart="10dp" android:textSize="16sp"
-                android:textStyle="bold" android:textColor="@color/text_primary"
-                android:text="USD" />
+            <!-- spacer -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
 
-            <LinearLayout android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:orientation="vertical"
+            <!-- تغییر + قیمت سمت راست -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="end">
-                <TextView android:id="@+id/chg0" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:textSize="13sp"
-                    android:textColor="#E53935" android:gravity="end" android:text="--" />
-                <TextView android:id="@+id/price0" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:textSize="22sp"
-                    android:textStyle="bold" android:textColor="@color/text_primary"
-                    android:gravity="end" android:text="---" />
+                <TextView
+                    android:id="@+id/chg0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textColor="#E53935"
+                    android:gravity="end"
+                    android:text="--" />
+                <TextView
+                    android:id="@+id/price0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:gravity="end"
+                    android:text="---" />
             </LinearLayout>
         </LinearLayout>
 
         <TextView android:layout_width="match_parent" android:layout_height="1dp"
             android:background="#18000000" android:text="" />
 
-        <!-- Row 1 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
-            android:layout_weight="1" android:orientation="horizontal"
+        <!-- ردیف ۱ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <TextView android:id="@+id/emoji1" android:layout_width="32dp"
-                android:layout_height="32dp" android:textSize="22sp"
-                android:gravity="center" android:text="🇪🇺" />
+            <LinearLayout
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/emoji1"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="🇪🇺" />
+                <TextView
+                    android:id="@+id/sym1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:text="EUR" />
+            </LinearLayout>
 
-            <TextView android:id="@+id/sym1" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginStart="10dp" android:textSize="16sp"
-                android:textStyle="bold" android:textColor="@color/text_primary"
-                android:text="EUR" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
 
-            <LinearLayout android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:orientation="vertical"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="end">
-                <TextView android:id="@+id/chg1" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:textSize="13sp"
-                    android:textColor="#E53935" android:gravity="end" android:text="--" />
-                <TextView android:id="@+id/price1" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:textSize="22sp"
-                    android:textStyle="bold" android:textColor="@color/text_primary"
-                    android:gravity="end" android:text="---" />
+                <TextView
+                    android:id="@+id/chg1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textColor="#E53935"
+                    android:gravity="end"
+                    android:text="--" />
+                <TextView
+                    android:id="@+id/price1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:gravity="end"
+                    android:text="---" />
             </LinearLayout>
         </LinearLayout>
 
         <TextView android:layout_width="match_parent" android:layout_height="1dp"
             android:background="#18000000" android:text="" />
 
-        <!-- Row 2 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
-            android:layout_weight="1" android:orientation="horizontal"
+        <!-- ردیف ۲ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <TextView android:id="@+id/emoji2" android:layout_width="32dp"
-                android:layout_height="32dp" android:textSize="22sp"
-                android:gravity="center" android:text="🥇" />
+            <LinearLayout
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/emoji2"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="🥇" />
+                <TextView
+                    android:id="@+id/sym2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:text="GOLD" />
+            </LinearLayout>
 
-            <TextView android:id="@+id/sym2" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginStart="10dp" android:textSize="16sp"
-                android:textStyle="bold" android:textColor="@color/text_primary"
-                android:text="GOLD" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
 
-            <LinearLayout android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:orientation="vertical"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="end">
-                <TextView android:id="@+id/chg2" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:textSize="13sp"
-                    android:textColor="#E53935" android:gravity="end" android:text="--" />
-                <TextView android:id="@+id/price2" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:textSize="22sp"
-                    android:textStyle="bold" android:textColor="@color/text_primary"
-                    android:gravity="end" android:text="---" />
+                <TextView
+                    android:id="@+id/chg2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textColor="#E53935"
+                    android:gravity="end"
+                    android:text="--" />
+                <TextView
+                    android:id="@+id/price2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:gravity="end"
+                    android:text="---" />
             </LinearLayout>
         </LinearLayout>
 
         <TextView android:id="@+id/update_time" android:layout_width="0dp"
             android:layout_height="0dp" android:visibility="gone" android:text="" />
+
     </LinearLayout>
 </LinearLayout>

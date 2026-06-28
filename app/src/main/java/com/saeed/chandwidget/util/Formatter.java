@@ -16,47 +16,39 @@ public class Formatter {
         FA.setDecimalSeparator('.');
     }
 
-    /**
-     * Format price for widget display
-     */
     public static String formatPrice(double price, PriceItem.PriceType type, boolean persian) {
         switch (type) {
-            case CURRENCY_TOMAN:
-                return formatToman(price, persian);
-            case GOLD_TOMAN:
-                return formatGoldToman(price, persian);
-            case CRYPTO_USD:
-                return formatCryptoUsd(price, persian);
-            case CRYPTO_TOMAN:
-                return formatToman(price, persian);
-            default:
-                return String.valueOf((long) price);
+            case CURRENCY_TOMAN:  return formatToman(price, persian);
+            case GOLD_TOMAN:      return formatGoldToman(price, persian);
+            case CRYPTO_USD:      return formatCryptoUsd(price, persian);
+            case CRYPTO_TOMAN:    return formatToman(price, persian);
+            default:              return String.valueOf((long) price);
         }
     }
 
-    /** e.g. 166,650 تومان */
+    /** ارزها: بدون واحد — e.g. 172,185 */
     private static String formatToman(double price, boolean persian) {
         long val = (long) price;
         DecimalFormat df = new DecimalFormat("#,###", persian ? FA : EN);
         return df.format(val);
     }
 
-    /** e.g. 168.59M (میلیون تومان) */
+    /** طلا/سکه: میلیون تومان — e.g. 17.07M یا 17.07م.ت */
     private static String formatGoldToman(double price, boolean persian) {
         double million = price / 1_000_000.0;
-        String suffix = persian ? " م.ت" : " M";
         if (million >= 1.0) {
             DecimalFormat df = new DecimalFormat("#,##0.00", persian ? FA : EN);
+            String suffix = persian ? "م.ت" : "M";
             return df.format(million) + suffix;
         } else {
-            // below 1M, show in thousands
             double thousand = price / 1000.0;
             DecimalFormat df = new DecimalFormat("#,##0.0", persian ? FA : EN);
-            return df.format(thousand) + (persian ? " ه.ت" : " K");
+            String suffix = persian ? "ه.ت" : "K";
+            return df.format(thousand) + suffix;
         }
     }
 
-    /** e.g. $104,532 or $0.9997 */
+    /** رمزارز: دلار — e.g. $104,532 */
     private static String formatCryptoUsd(double price, boolean persian) {
         if (price >= 1000) {
             DecimalFormat df = new DecimalFormat("#,##0", persian ? FA : EN);
@@ -70,10 +62,7 @@ public class Formatter {
         }
     }
 
-    /**
-     * Format change amount for display (compact)
-     * e.g.  ↑2.4K  or  ↓1.2M
-     */
+    /** تغییر قیمت فشرده — e.g. ↑2.4K */
     public static String formatChange(double change, PriceItem.PriceType type, boolean persian) {
         if (change == 0) return "—";
         String sign = change > 0 ? "↑" : "↓";
@@ -82,36 +71,29 @@ public class Formatter {
         String val;
         switch (type) {
             case GOLD_TOMAN:
-                // show in thousands
-                if (abs >= 1_000_000) {
-                    val = new DecimalFormat("0.##", EN).format(abs / 1_000_000) + "M";
-                } else if (abs >= 1000) {
-                    val = new DecimalFormat("0.##", EN).format(abs / 1000) + "K";
-                } else {
-                    val = new DecimalFormat("0.#", EN).format(abs);
-                }
+                if (abs >= 1_000_000) val = fmt(abs / 1_000_000) + "M";
+                else if (abs >= 1000)  val = fmt(abs / 1000) + "K";
+                else                   val = fmt(abs);
                 break;
             case CURRENCY_TOMAN:
             case CRYPTO_TOMAN:
-                if (abs >= 1_000_000) {
-                    val = new DecimalFormat("0.##", EN).format(abs / 1_000_000) + "M";
-                } else if (abs >= 1000) {
-                    val = new DecimalFormat("0.##", EN).format(abs / 1000) + "K";
-                } else {
-                    val = new DecimalFormat("0.#", EN).format(abs);
-                }
+                if (abs >= 1_000_000) val = fmt(abs / 1_000_000) + "M";
+                else if (abs >= 1000)  val = fmt(abs / 1000) + "K";
+                else                   val = fmt(abs);
                 break;
             case CRYPTO_USD:
-                if (abs >= 1000) {
-                    val = "$" + new DecimalFormat("0.#", EN).format(abs / 1000) + "K";
-                } else {
-                    val = "$" + new DecimalFormat("0.##", EN).format(abs);
-                }
+                if (abs >= 1000) val = "$" + fmt(abs / 1000) + "K";
+                else              val = "$" + fmt(abs);
                 break;
             default:
-                val = new DecimalFormat("0.#", EN).format(abs);
+                val = fmt(abs);
         }
         return sign + val;
+    }
+
+    private static String fmt(double v) {
+        DecimalFormat df = new DecimalFormat("#,##0.##", EN);
+        return df.format(v);
     }
 
     public static String toPersianDigits(String s) {
