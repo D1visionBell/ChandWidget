@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chand</string>
+    <!-- Widget labels shown in widget picker -->
+    <string name="widget_label_3x3">Chand — 3×3 (3 قیمت)</string>
+    <string name="widget_label_single">Chand — 2×2 (تک قیمت)</string>
+    <string name="widget_label_2x2">Chand — 2×2 (3 قیمت)</string>
+    <!-- Descriptions -->
+    <string name="widget_desc_3x3">نمایش 3 قیمت با متن بزرگ</string>
+    <string name="widget_desc_single">نمایش یک قیمت به صورت بزرگ</string>
+    <string name="widget_desc_2x2">نمایش 3 قیمت فشرده</string>
+    <!-- Config activity -->
+    <string name="config_title">Chand Widget</string>
+    <string name="config_subtitle">قیمت‌های نمایشی را انتخاب کنید</string>
+    <string name="lang_label">Language / زبان</string>
+    <string name="slot_label">انتخاب آیتم‌ها</string>
+    <string name="btn_save">ذخیره</string>
+    <string name="btn_refresh">بروزرسانی</string>
+    <string name="loading">در حال بارگذاری…</string>
+    <string name="section_widget">تنظیمات ویجت</string>
+    <string name="widget_size_single">تک قیمت</string>
+    <string name="widget_size_triple">3 قیمت</string>
+    <string name="multi_row_label">نمایش 3 ردیف (2×2)</string>
+    <string name="multi_row_desc">به جای یک قیمت بزرگ، 3 قیمت کوچک نمایش داده می‌شود</string>
+    <!-- Legacy (kept for safety) -->
+    <string name="widget_label">Chand Widget</string>
+    <string name="widget_label_small">Chand Widget Small</string>
+    <string name="widget_description">قیمت‌های بازار ایران</string>
+    <string name="widget_description_small">قیمت تک نماد</string>
+</resources>
