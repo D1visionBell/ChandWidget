@@ -26,6 +26,7 @@ import com.saeed.chandwidget.util.Formatter;
 import com.saeed.chandwidget.util.Prefs;
 import com.saeed.chandwidget.widget.PriceUpdateService;
 import com.saeed.chandwidget.widget.PriceWidgetProvider;
+import com.saeed.chandwidget.widget.PriceWidgetProviderSingle;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
