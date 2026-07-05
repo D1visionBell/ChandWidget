@@ -19,9 +19,9 @@
 
 <br>
 
-<img src="assets/Main Page.jpg" width="260">
-<img src="assets/Widget Setting.jpg" width="260">
-<img src="assets/English Widgets.jpg" width="260">
+<img src="assets/MainPage.jpg" width="260">
+<img src="assets/WidgetSetting.jpg" width="260">
+<img src="assets/EnglishWidgets.jpg" width="260">
 
 </div>
 
