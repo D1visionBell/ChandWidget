@@ -7,6 +7,7 @@
 
 <img src="https://img.shields.io/badge/Android-8%2B-3DDC84">
 <img src="https://img.shields.io/badge/Widgets-3-blue">
+<img src="https://img.shields.io/badge/Theme-Light%20%26%20Dark-6f42c1">
 <img src="https://img.shields.io/badge/Language-FA%20%7C%20EN-orange">
 
 </p>
