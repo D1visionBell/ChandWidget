@@ -3,6 +3,7 @@
 ویجت اندروید برای نمایش لحظه‌ای قیمت‌های بازار ایران روی صفحه اصلی گوشی — الهام گرفته از اپ Chand برای iOS.
 
 ---
+<img src="assets/Main Page.jpg" width="300"> <img src="assets/Widget Setting.jpg" width="300"> <img src="assets/English Widgets.jpg" width="300">
 
 ## ویجت‌ها
 
