@@ -3,6 +3,13 @@
 <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="144">
 
 # چند؟!
+<p align="center">
+
+<img src="https://img.shields.io/badge/Android-8%2B-3DDC84">
+<img src="https://img.shields.io/badge/Widgets-3-blue">
+<img src="https://img.shields.io/badge/Language-FA%20%7C%20EN-orange">
+
+</p>
 
 ### ویجت قیمت بازار ایران برای اندروید
 
