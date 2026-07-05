@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Chand</string>
     <!-- Widget labels shown in widget picker -->
-    <string name="widget_label_3x3">Chand — 3×3 (3 قیمت)</string>
+    <string name="widget_label_3x3">Chand — 4×2 (3 قیمت)</string>
     <string name="widget_label_single">Chand — 2×2 (تک قیمت)</string>
     <string name="widget_label_2x2">Chand — 2×2 (3 قیمت)</string>
     <!-- Descriptions -->
@@ -22,6 +22,12 @@
     <string name="widget_size_triple">3 قیمت</string>
     <string name="multi_row_label">نمایش 3 ردیف (2×2)</string>
     <string name="multi_row_desc">به جای یک قیمت بزرگ، 3 قیمت کوچک نمایش داده می‌شود</string>
+    <string name="battery_notice_title">بهینه‌سازی باتری فعال است</string>
+    <string name="battery_notice_desc">ممکن است آپدیت هر 30 دقیقه ویجت را به تأخیر بیندازد</string>
+    <string name="battery_notice_action">رفع کن</string>
+    <string name="alarm_notice_title">مجوز «هشدار و یادآوری» فعال نیست</string>
+    <string name="alarm_notice_desc">بدون این مجوز، آپدیت هر 30 دقیقه ممکن است نامنظم شود</string>
+    <string name="alarm_notice_action">رفع کن</string>
     <!-- Legacy (kept for safety) -->
     <string name="widget_label">Chand Widget</string>
     <string name="widget_label_small">Chand Widget Small</string>

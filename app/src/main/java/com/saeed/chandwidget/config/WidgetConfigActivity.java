@@ -26,6 +26,7 @@ import com.saeed.chandwidget.util.Formatter;
 import com.saeed.chandwidget.util.Prefs;
 import com.saeed.chandwidget.widget.PriceUpdateService;
 import com.saeed.chandwidget.widget.PriceWidgetProvider;
+import com.saeed.chandwidget.widget.PriceWidgetProvider2x2;
 import com.saeed.chandwidget.widget.PriceWidgetProviderSingle;
 
 import java.text.SimpleDateFormat;
@@ -59,18 +60,26 @@ public class WidgetConfigActivity extends AppCompatActivity {
         }
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            // Opened from the launcher (app icon), not from a widget's tap
+            // target — fall back to whichever widget instance already exists.
+            // NOTE: this previously only checked PriceWidgetProvider (3×3) and
+            // PriceWidgetProviderSingle (2×2 single). If someone only had a
+            // 2×2 3-row widget on their home screen, appWidgetId stayed
+            // INVALID and the whole "widget settings" section silently
+            // disappeared (configSection.setVisibility(GONE) below) — added
+            // the missing PriceWidgetProvider2x2 check.
             AppWidgetManager mgr = AppWidgetManager.getInstance(this);
-            android.content.ComponentName cn = new android.content.ComponentName(
-                    this, PriceWidgetProvider.class);
-            int[] ids = mgr.getAppWidgetIds(cn);
-            if (ids != null && ids.length > 0) {
-                appWidgetId = ids[0];
-            } else {
-                android.content.ComponentName cnSmall = new android.content.ComponentName(
-                        this, PriceWidgetProviderSingle.class);
-                int[] smallIds = mgr.getAppWidgetIds(cnSmall);
-                if (smallIds != null && smallIds.length > 0) {
-                    appWidgetId = smallIds[0];
+            Class<?>[] providers = {
+                    PriceWidgetProvider.class,
+                    PriceWidgetProviderSingle.class,
+                    PriceWidgetProvider2x2.class
+            };
+            for (Class<?> provider : providers) {
+                android.content.ComponentName cn = new android.content.ComponentName(this, provider);
+                int[] ids = mgr.getAppWidgetIds(cn);
+                if (ids != null && ids.length > 0) {
+                    appWidgetId = ids[0];
+                    break;
                 }
             }
         }
@@ -97,6 +106,12 @@ public class WidgetConfigActivity extends AppCompatActivity {
             updatePriceListUI();
             updateLastUpdateTime();
         }, 5000);
+
+        // ── Battery optimization notice ──────────────────────────────────────
+        setupBatteryNotice();
+
+        // ── Exact alarm permission notice (Android 13+) ──────────────────────
+        setupAlarmNotice();
 
         // ── Refresh button ────────────────────────────────────────────────────
         findViewById(R.id.btn_refresh_app).setOnClickListener(v -> {
@@ -327,6 +342,88 @@ public class WidgetConfigActivity extends AppCompatActivity {
         }
     }
 
+    // ── Battery optimization ──────────────────────────────────────────────────
+
+    private void setupBatteryNotice() {
+        View notice = findViewById(R.id.battery_notice);
+        if (notice == null) return;
+        refreshBatteryNoticeVisibility(notice);
+        View btn = findViewById(R.id.btn_battery_fix);
+        if (btn != null) {
+            btn.setOnClickListener(v -> {
+                try {
+                    Intent i = new Intent(android.provider.Settings
+                            .ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    i.setData(android.net.Uri.parse("package:" + getPackageName()));
+                    startActivity(i);
+                } catch (Exception e) {
+                    // Some OEMs (MIUI in particular) don't honor this intent —
+                    // fall back to the general battery-optimization list so
+                    // the user can still find and whitelist the app manually.
+                    try {
+                        startActivity(new Intent(
+                                android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+                    } catch (Exception ignored) {}
+                }
+            });
+        }
+    }
+
+    private void refreshBatteryNoticeVisibility(View notice) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            notice.setVisibility(View.GONE);
+            return;
+        }
+        android.os.PowerManager pm = (android.os.PowerManager) getSystemService(POWER_SERVICE);
+        boolean exempt = pm != null && pm.isIgnoringBatteryOptimizations(getPackageName());
+        notice.setVisibility(exempt ? View.GONE : View.VISIBLE);
+    }
+
+    // ── Exact alarm permission (Android 13+) ────────────────────────────────
+    // On API 33+, SCHEDULE_EXACT_ALARM has to be granted by the user from
+    // Settings — it's no longer automatic like it was on API 31-32. Without
+    // it, PriceWidgetProvider.scheduleAlarm() falls back to an inexact alarm,
+    // which the OS is free to delay under Doze. This notice gets the user
+    // straight to the toggle, the same way the battery notice does.
+
+    private void setupAlarmNotice() {
+        View notice = findViewById(R.id.alarm_notice);
+        if (notice == null) return;
+        refreshAlarmNoticeVisibility(notice);
+        View btn = findViewById(R.id.btn_alarm_fix);
+        if (btn != null) {
+            btn.setOnClickListener(v -> {
+                try {
+                    Intent i = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                    i.setData(android.net.Uri.parse("package:" + getPackageName()));
+                    startActivity(i);
+                } catch (Exception ignored) {}
+            });
+        }
+    }
+
+    private void refreshAlarmNoticeVisibility(View notice) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            notice.setVisibility(View.GONE);
+            return;
+        }
+        android.app.AlarmManager am = (android.app.AlarmManager) getSystemService(ALARM_SERVICE);
+        boolean granted = am != null && am.canScheduleExactAlarms();
+        notice.setVisibility(granted ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // The user may have just come back from the system battery-optimization
+        // or alarm-permission screen — re-check so each notice disappears once
+        // they've granted it.
+        View batteryNotice = findViewById(R.id.battery_notice);
+        if (batteryNotice != null) refreshBatteryNoticeVisibility(batteryNotice);
+        View alarmNotice = findViewById(R.id.alarm_notice);
+        if (alarmNotice != null) refreshAlarmNoticeVisibility(alarmNotice);
+    }
+
     private void updateLastUpdateTime() {
         long cacheTime = Prefs.getCacheTime(this);
         TextView tv = findViewById(R.id.last_update_time);
@@ -341,16 +438,25 @@ public class WidgetConfigActivity extends AppCompatActivity {
 
     // ── Widget size detection ─────────────────────────────────────────────────
 
-    private boolean isSmallWidget() {
-        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return false;
+    private enum WidgetKind { SINGLE, TRIPLE_2X2, TRIPLE_3X3 }
+
+    private WidgetKind widgetKind() {
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return WidgetKind.TRIPLE_3X3;
         try {
             AppWidgetManager mgr = AppWidgetManager.getInstance(this);
             AppWidgetProviderInfo info = mgr.getAppWidgetInfo(appWidgetId);
-            if (info == null) return false;
-            return info.provider.getClassName().contains("Small");
+            if (info == null) return WidgetKind.TRIPLE_3X3;
+            String cls = info.provider.getClassName();
+            if (cls.contains("Single")) return WidgetKind.SINGLE;
+            if (cls.endsWith("2x2")) return WidgetKind.TRIPLE_2X2;
+            return WidgetKind.TRIPLE_3X3;
         } catch (Exception e) {
-            return false;
+            return WidgetKind.TRIPLE_3X3;
         }
+    }
+
+    private boolean isSmallWidget() {
+        return widgetKind() == WidgetKind.SINGLE;
     }
 
     // ── Spinner helpers ───────────────────────────────────────────────────────
@@ -368,7 +474,8 @@ public class WidgetConfigActivity extends AppCompatActivity {
     // ── Save ──────────────────────────────────────────────────────────────────
 
     private void save() {
-        boolean small = isSmallWidget();
+        WidgetKind kind = widgetKind();
+        boolean small = kind == WidgetKind.SINGLE;
         boolean multiRow = small && multiRowSwitch != null && multiRowSwitch.isChecked();
 
         int slotsToSave = (small && !multiRow) ? 1 : 3;
@@ -391,11 +498,22 @@ public class WidgetConfigActivity extends AppCompatActivity {
             startService(svc);
         }
 
+        // NOTE: this previously only branched on "small" vs. not, and the
+        // "not small" branch always called PriceWidgetProvider.update() (the
+        // 3×3 layout) — including for the 2×2 3-row widget. That meant right
+        // after configuring a 2×2 3-row widget, it would briefly render the
+        // 3×3 layout into that small cell, looking broken until the next
+        // scheduled refresh called updateAllWidgets() and fixed it.
         AppWidgetManager mgr = AppWidgetManager.getInstance(this);
-        if (small) {
-            PriceWidgetProviderSingle.update(this, mgr, appWidgetId);
-        } else {
-            PriceWidgetProvider.update(this, mgr, appWidgetId);
+        switch (kind) {
+            case SINGLE:
+                PriceWidgetProviderSingle.update(this, mgr, appWidgetId);
+                break;
+            case TRIPLE_2X2:
+                PriceWidgetProvider2x2.update(this, mgr, appWidgetId);
+                break;
+            default:
+                PriceWidgetProvider.update(this, mgr, appWidgetId);
         }
 
         if (isNewWidget) {

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.RemoteViews;
 import com.saeed.chandwidget.R;
 import com.saeed.chandwidget.config.WidgetConfigActivity;
@@ -44,6 +45,12 @@ public class PriceWidgetProvider extends AppWidgetProvider {
         String action = intent.getAction();
         if (ACTION_MANUAL_REFRESH.equals(action) || Intent.ACTION_BOOT_COMPLETED.equals(action)) {
             triggerFetch(ctx);
+            // Boot wipes all previously scheduled alarms, and relying on the OS
+            // calling onUpdate() again for existing widgets after boot is not
+            // guaranteed on every launcher/OEM — schedule explicitly here too.
+            if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+                scheduleAlarm(ctx);
+            }
         }
     }
 
@@ -67,19 +74,16 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             int[] priceIds = {R.id.price0, R.id.price1, R.id.price2};
 
 
-            // CRITICAL: set sizes in Java — Samsung launcher overrides XML textSize on update
-            int[] nameIds2  = {R.id.name0,  R.id.name1,  R.id.name2};
-            int[] symIds2   = {R.id.sym0,   R.id.sym1,   R.id.sym2};
-            int[] emojiIds2 = {R.id.emoji0, R.id.emoji1, R.id.emoji2};
-            int[] chgIds2   = {R.id.chg0,   R.id.chg1,   R.id.chg2};
-            int[] priceIds2 = {R.id.price0, R.id.price1, R.id.price2};
+            // Must set sizes in Java — Samsung launcher overrides XML textSize on RemoteViews update
             for (int i = 0; i < 3; i++) {
-                views.setTextViewTextSize(emojiIds2[i], TypedValue.COMPLEX_UNIT_SP, 22);
-                views.setTextViewTextSize(nameIds2[i],  TypedValue.COMPLEX_UNIT_SP, 17);
-                views.setTextViewTextSize(symIds2[i],   TypedValue.COMPLEX_UNIT_SP, 13);
-                views.setTextViewTextSize(chgIds2[i],   TypedValue.COMPLEX_UNIT_SP, 13);
-                views.setTextViewTextSize(priceIds2[i], TypedValue.COMPLEX_UNIT_SP, 24);
+                views.setTextViewTextSize(emojiIds[i], TypedValue.COMPLEX_UNIT_SP, 22);
+                views.setTextViewTextSize(nameIds[i],  TypedValue.COMPLEX_UNIT_SP, 15);
+                views.setTextViewTextSize(symIds[i],   TypedValue.COMPLEX_UNIT_SP, 13);
+                views.setTextViewTextSize(chgIds[i],   TypedValue.COMPLEX_UNIT_SP, 13);
+                views.setTextViewTextSize(priceIds[i], TypedValue.COMPLEX_UNIT_SP, 24);
             }
+            views.setTextViewTextSize(R.id.update_time, TypedValue.COMPLEX_UNIT_SP, 9);
+
             for (int slot = 0; slot < 3; slot++) {
                 String key = Prefs.getSlot(ctx, appWidgetId, slot);
                 PriceItem item = PriceRegistry.get(key);
@@ -101,6 +105,25 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                     chgStr   = Formatter.toPersianDigits(chgStr);
                 }
 
+                // The name column is a fixed-width box inside an explicitly
+                // LTR row (so emoji-left/price-right stays put regardless of
+                // language). With gravity="start", real Persian text — which
+                // is right-to-left — ended up drawn against the LEFT edge of
+                // that box instead of hugging its right edge, leaving a gap.
+                // Flipping to END fixes that, BUT it must only happen for
+                // names that are actually Persian script. A few entries (like
+                // EOS) have no Farsi translation and keep their Latin ticker
+                // as nameFa, so blindly flipping gravity for every row
+                // whenever the app is in Persian mode pushed that Latin text
+                // to the right edge too, making it look like it "moved
+                // right" compared to the other rows. Basing the decision on
+                // the actual text being shown (not just the app language)
+                // fixes EOS without touching the rows that are genuinely
+                // Persian.
+                boolean rtlName = persian && Formatter.containsRtl(nameStr);
+                int nameGravity = (rtlName ? Gravity.END : Gravity.START) | Gravity.CENTER_VERTICAL;
+                views.setInt(nameIds[slot], "setGravity", nameGravity);
+
                 views.setTextViewText(emojiIds[slot], item.getEmoji());
                 views.setTextViewText(nameIds[slot],  nameStr);
                 views.setTextViewText(symIds[slot],   symStr);
@@ -114,7 +137,9 @@ public class PriceWidgetProvider extends AppWidgetProvider {
             long cacheTime = Prefs.getCacheTime(ctx);
             if (cacheTime > 0) {
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.US);
-                views.setTextViewText(R.id.update_time, sdf.format(new java.util.Date(cacheTime)));
+                String time = sdf.format(new java.util.Date(cacheTime));
+                if (persian) time = Formatter.toPersianDigits(time);
+                views.setTextViewText(R.id.update_time, time);
             }
 
             mgr.updateAppWidget(appWidgetId, views);
@@ -140,16 +165,65 @@ public class PriceWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    /**
+     * Schedules the NEXT single refresh, UPDATE_INTERVAL_MS from now.
+     *
+     * This used to be a single setInexactRepeating(ELAPSED_REALTIME, ...) call.
+     * That was the reason updates were unreliable:
+     *  1. ELAPSED_REALTIME (not _WAKEUP) does not wake the CPU. If the phone is
+     *     asleep, the alarm just waits until something else wakes the device,
+     *     which on an idle phone can be hours.
+     *  2. Even the _WAKEUP variant, when repeating and inexact, gets pushed to
+     *     the next Doze "maintenance window" by the OS once the screen has
+     *     been off for a while — so a nominal 30-minute period can silently
+     *     stretch to 1-2 hours or more on stock Android, and far worse on
+     *     Xiaomi/Samsung/Huawei, which apply extra background restrictions
+     *     on top of AOSP Doze.
+     *
+     * setExactAndAllowWhileIdle + ELAPSED_REALTIME_WAKEUP is the documented way
+     * to get an alarm that reliably fires close to its target time even in
+     * Doze. The OS still rate-limits this API to roughly once every ~9 minutes
+     * per app while idle, which is well under our 30-minute cadence, so it's
+     * not throttled in practice.
+     *
+     * Instead of registering one repeating alarm up front, each firing
+     * re-schedules the next one itself (see PriceUpdateService, which calls
+     * this again once a fetch completes). That way, if the process was killed
+     * or the schedule was otherwise lost, the very next successful fetch
+     * re-establishes the chain rather than the whole thing quietly stopping.
+     */
     public static void scheduleAlarm(Context ctx) {
         try {
             AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+            if (am == null) return;
             Intent i = new Intent(ctx, PriceWidgetProvider.class);
             i.setAction(ACTION_MANUAL_REFRESH);
             PendingIntent pi = PendingIntent.getBroadcast(ctx, 1, i,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                    SystemClock.elapsedRealtime() + UPDATE_INTERVAL_MS,
-                    UPDATE_INTERVAL_MS, pi);
+            long triggerAt = SystemClock.elapsedRealtime() + UPDATE_INTERVAL_MS;
+
+            // On Android 12+ setExactAndAllowWhileIdle() requires the
+            // SCHEDULE_EXACT_ALARM permission, and on Android 13+ that
+            // permission has to be granted by the user in Settings (it's not
+            // automatic anymore). If it isn't granted, the exact call throws
+            // a SecurityException — previously that exception was caught
+            // below and the whole method just gave up, silently breaking the
+            // 30-minute chain forever. Checking canScheduleExactAlarms() up
+            // front and falling back to the inexact-but-still-wakeup variant
+            // means updates keep happening (the OS may shift them by a few
+            // minutes under Doze) instead of stopping completely.
+            boolean canBeExact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (canBeExact) {
+                    am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi);
+                } else {
+                    Log.w(TAG, "SCHEDULE_EXACT_ALARM not granted — falling back to inexact alarm");
+                    am.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi);
+                }
+            } else {
+                am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi);
+            }
         } catch (Exception e) {
             Log.e(TAG, "scheduleAlarm failed", e);
         }

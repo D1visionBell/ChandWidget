@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.RemoteViews;
 import com.saeed.chandwidget.R;
 import com.saeed.chandwidget.config.WidgetConfigActivity;
@@ -40,6 +41,15 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
     }
 
     public static void update(Context ctx, AppWidgetManager mgr, int appWidgetId) {
+        // The config screen's "3 ردیف" switch (Prefs.getSmallWidgetMultiRow) was
+        // being saved but never read here — this widget always rendered the
+        // single-big-price layout regardless of what the switch said. When the
+        // switch is on, reuse the exact 3-row renderer that the dedicated 2×2
+        // "3 قیمت" widget already uses, since both fit the same 2×2 footprint.
+        if (Prefs.getSmallWidgetMultiRow(ctx, appWidgetId)) {
+            PriceWidgetProvider2x2.update(ctx, mgr, appWidgetId);
+            return;
+        }
         try {
             boolean persian = Prefs.isPersian(ctx);
             RemoteViews views = new RemoteViews(ctx.getPackageName(), R.layout.widget_layout_small);
@@ -53,11 +63,12 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_root, cfgPi);
 
             // Must set sizes in Java — Samsung launcher overrides XML textSize on each RemoteViews update
-            views.setTextViewTextSize(R.id.emoji0, TypedValue.COMPLEX_UNIT_SP, 34);
+            views.setTextViewTextSize(R.id.emoji0, TypedValue.COMPLEX_UNIT_SP, 30);
             views.setTextViewTextSize(R.id.name0,  TypedValue.COMPLEX_UNIT_SP, 17);
             views.setTextViewTextSize(R.id.sym0,   TypedValue.COMPLEX_UNIT_SP, 13);
             views.setTextViewTextSize(R.id.chg0,   TypedValue.COMPLEX_UNIT_SP, 20);
             views.setTextViewTextSize(R.id.price0, TypedValue.COMPLEX_UNIT_SP, 42);
+            views.setTextViewTextSize(R.id.update_time, TypedValue.COMPLEX_UNIT_SP, 9);
 
             String key = Prefs.getSlot(ctx, appWidgetId, 0);
             PriceItem item = PriceRegistry.get(key);
@@ -85,6 +96,20 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
                 chgStr   = Formatter.toPersianDigits(chgStr);
             }
 
+            // Same fix as the 4×2 widget: name0's box spans the full row width
+            // (it's next to the emoji, not a narrow fixed column), so blindly
+            // flipping to END for every row whenever the app is in Persian
+            // mode is even more visible here — entries with no Farsi
+            // translation (like EOS, which stores its Latin ticker as nameFa
+            // too) would jump all the way to the far edge of the widget
+            // instead of sitting next to the emoji like every other item.
+            // Basing the gravity on the actual text being shown fixes that
+            // without affecting genuinely Persian names/symbols.
+            int nameGravity = (Formatter.containsRtl(nameStr) ? Gravity.END : Gravity.START) | Gravity.CENTER_VERTICAL;
+            int symGravity  = (Formatter.containsRtl(symStr)  ? Gravity.END : Gravity.START) | Gravity.CENTER_VERTICAL;
+            views.setInt(R.id.name0, "setGravity", nameGravity);
+            views.setInt(R.id.sym0,  "setGravity", symGravity);
+
             views.setTextViewText(R.id.emoji0, item.getEmoji());
             views.setTextViewText(R.id.name0,  nameStr);
             views.setTextViewText(R.id.sym0,   symStr);
@@ -93,6 +118,14 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
 
             int changeColor = change >= 0 ? Color.parseColor("#E53935") : Color.parseColor("#43A047");
             views.setTextColor(R.id.chg0, changeColor);
+
+            long cacheTime = Prefs.getCacheTime(ctx);
+            if (cacheTime > 0) {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.US);
+                String time = sdf.format(new java.util.Date(cacheTime));
+                if (persian) time = Formatter.toPersianDigits(time);
+                views.setTextViewText(R.id.update_time, time);
+            }
 
             mgr.updateAppWidget(appWidgetId, views);
         } catch (Exception e) {

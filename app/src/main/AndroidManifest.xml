@@ -7,6 +7,20 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Lets us ask the user to exempt the app from battery optimization.
+         On Xiaomi/Samsung/Huawei/OnePlus in particular, background alarms for
+         apps that aren't exempted get silently delayed or dropped regardless
+         of AlarmManager API used — this is the practical fix for those OEMs
+         on top of the setExactAndAllowWhileIdle change in PriceWidgetProvider. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- Required to call setExactAndAllowWhileIdle() on Android 12+. Without
+         this, that call throws a SecurityException that was being silently
+         swallowed by the try/catch in scheduleAlarm() — no alarm ever got
+         scheduled, so the 30-minute refresh chain died right after the first
+         run. On Android 13+ the user still has to flip this on manually in
+         Settings (see the in-app prompt in WidgetConfigActivity); declaring
+         it here just makes that possible. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"

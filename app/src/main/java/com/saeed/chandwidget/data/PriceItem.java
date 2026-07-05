@@ -17,6 +17,9 @@ public class PriceItem {
     public static final String KEY_SEKKE  = "sekeb";   // سکه بهار آزادی
     public static final String KEY_NIM    = "nim";     // نیم سکه
     public static final String KEY_ROB    = "rob";     // ربع سکه
+    // Gold — world ounce price, already quoted in USD (not Rial like the
+    // gold keys above); use /v1/market/tmp endpoint with no Rial→Toman conversion
+    public static final String KEY_GOLD_OUNCE = "ons";
     // Crypto — use /v1/widget/tmp endpoint (name field)
     public static final String KEY_BTC    = "crypto-bitcoin";
     public static final String KEY_ETH    = "crypto-ethereum";
@@ -24,11 +27,26 @@ public class PriceItem {
     public static final String KEY_BNB    = "crypto-binance-coin";
     public static final String KEY_BCH    = "crypto-bitcoin-cash";
     public static final String KEY_EOS    = "crypto-eos";
+    public static final String KEY_SOL    = "crypto-solana";
+    // NOTE: XRP, TRON, Dogecoin, and Tether were not present in any sample
+    // API response on hand. These four slugs follow the same
+    // "crypto-<full-english-name>" pattern as every confirmed key above
+    // (crypto-bitcoin, crypto-ethereum, crypto-solana, etc.), so they're a
+    // reasonable best guess — but unlike the other keys here, they are NOT
+    // confirmed against a real response. If any of these four show "—" in
+    // the app after building, send the actual JSON for them (like the
+    // TGJU_api.txt sample) so the slug can be corrected precisely, the same
+    // way the BNB slug mismatch was fixed previously.
+    public static final String KEY_XRP    = "crypto-ripple";
+    public static final String KEY_TRX    = "crypto-tron";
+    public static final String KEY_DOGE   = "crypto-dogecoin";
+    public static final String KEY_USDT   = "crypto-tether";
 
     public enum PriceType {
         CURRENCY_TOMAN,
         GOLD_TOMAN,
         CRYPTO_USD,
+        GOLD_USD,
     }
 
     private final String key;

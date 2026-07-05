@@ -26,6 +26,7 @@ public class PriceRegistry {
         add(PriceItem.KEY_SEKKE,  "Azadi Coin",       "سکه بهار آزادی","COIN", "سکه", "🪙", PriceItem.PriceType.GOLD_TOMAN);
         add(PriceItem.KEY_NIM,    "Half Coin",        "نیم سکه",       "HALF", "نیم", "🪙", PriceItem.PriceType.GOLD_TOMAN);
         add(PriceItem.KEY_ROB,    "Quarter Coin",     "ربع سکه",       "QTR",  "ربع", "🪙", PriceItem.PriceType.GOLD_TOMAN);
+        add(PriceItem.KEY_GOLD_OUNCE, "Gold Ounce",   "اونس طلا",      "XAU",  "اونس", "🥇", PriceItem.PriceType.GOLD_USD);
         // Crypto
         add(PriceItem.KEY_BTC,    "Bitcoin",          "بیتکوین",        "BTC",  "BTC", "₿",  PriceItem.PriceType.CRYPTO_USD);
         add(PriceItem.KEY_ETH,    "Ethereum",         "اتریوم",         "ETH",  "ETH", "Ξ",  PriceItem.PriceType.CRYPTO_USD);
@@ -33,6 +34,11 @@ public class PriceRegistry {
         add(PriceItem.KEY_BNB,    "Binance",          "بایننس",         "BNB",  "BNB", "🔶", PriceItem.PriceType.CRYPTO_USD);
         add(PriceItem.KEY_BCH,    "Bitcoin Cash",     "بیتکوین کش",    "BCH",  "BCH", "💠", PriceItem.PriceType.CRYPTO_USD);
         add(PriceItem.KEY_EOS,    "EOS",              "EOS",            "EOS",  "EOS", "⚫", PriceItem.PriceType.CRYPTO_USD);
+        add(PriceItem.KEY_SOL,    "Solana",           "سولانا",         "SOL",  "SOL", "◎",  PriceItem.PriceType.CRYPTO_USD);
+        add(PriceItem.KEY_XRP,    "XRP",              "ریپل",           "XRP",  "XRP", "✕",  PriceItem.PriceType.CRYPTO_USD);
+        add(PriceItem.KEY_TRX,    "Tron",             "ترون",           "TRX",  "TRX", "🔺", PriceItem.PriceType.CRYPTO_USD);
+        add(PriceItem.KEY_DOGE,   "Dogecoin",         "دوج کوین",      "DOGE", "DOGE","🐕", PriceItem.PriceType.CRYPTO_USD);
+        add(PriceItem.KEY_USDT,   "Tether",           "تتر",            "USDT", "USDT","🟢", PriceItem.PriceType.CURRENCY_TOMAN);
     }
 
     private static void add(String key, String en, String fa,

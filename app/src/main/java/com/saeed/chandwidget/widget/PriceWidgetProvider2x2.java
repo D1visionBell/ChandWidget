@@ -59,11 +59,12 @@ public class PriceWidgetProvider2x2 extends AppWidgetProvider {
 
             // Must set sizes in Java — Samsung launcher overrides XML textSize on RemoteViews update
             for (int i = 0; i < 3; i++) {
-                views.setTextViewTextSize(emojiIds[i], TypedValue.COMPLEX_UNIT_SP, 22);
-                views.setTextViewTextSize(symIds[i],   TypedValue.COMPLEX_UNIT_SP, 16);
-                views.setTextViewTextSize(chgIds[i],   TypedValue.COMPLEX_UNIT_SP, 13);
-                views.setTextViewTextSize(priceIds[i], TypedValue.COMPLEX_UNIT_SP, 22);
+                views.setTextViewTextSize(emojiIds[i], TypedValue.COMPLEX_UNIT_SP, 14);
+                views.setTextViewTextSize(symIds[i],   TypedValue.COMPLEX_UNIT_SP, 12);
+                views.setTextViewTextSize(chgIds[i],   TypedValue.COMPLEX_UNIT_SP, 10);
+                views.setTextViewTextSize(priceIds[i], TypedValue.COMPLEX_UNIT_SP, 19);
             }
+            views.setTextViewTextSize(R.id.update_time, TypedValue.COMPLEX_UNIT_SP, 8);
 
             for (int slot = 0; slot < 3; slot++) {
                 String key = Prefs.getSlot(ctx, appWidgetId, slot);
@@ -79,9 +80,10 @@ public class PriceWidgetProvider2x2 extends AppWidgetProvider {
                 double price  = Prefs.getCachedPrice(ctx, key);
                 double change = Prefs.getCachedChange(ctx, key);
 
-                // Always use English symbol in 3-row compact widget — prevents
-                // long Farsi names like "نیم سکه" from squeezing against the price
-                String symStr   = item.getSymbolEn();
+                // Locale-aware compact label: Persian mode now shows an actual
+                // Farsi word (e.g. "دلار", "طلا") instead of always falling
+                // back to the Latin 3-letter code.
+                String symStr   = Formatter.shortLabel(item, persian);
                 String priceStr = Formatter.formatPrice(price, item.getType(), persian);
                 String chgStr   = Formatter.formatChange(change, item.getType(), persian);
 
@@ -97,6 +99,14 @@ public class PriceWidgetProvider2x2 extends AppWidgetProvider {
 
                 int changeColor = change >= 0 ? Color.parseColor("#E53935") : Color.parseColor("#43A047");
                 views.setTextColor(chgIds[slot], changeColor);
+            }
+
+            long cacheTime = Prefs.getCacheTime(ctx);
+            if (cacheTime > 0) {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.US);
+                String time = sdf.format(new java.util.Date(cacheTime));
+                if (persian) time = Formatter.toPersianDigits(time);
+                views.setTextViewText(R.id.update_time, time);
             }
 
             mgr.updateAppWidget(appWidgetId, views);

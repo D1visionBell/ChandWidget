@@ -3,7 +3,7 @@
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp"
+    android:padding="2dp"
     android:layoutDirection="ltr"
     android:background="@android:color/transparent">
 
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="12dp"
+        android:padding="9dp"
         android:layoutDirection="ltr"
         android:background="@drawable/card_bg">
 
@@ -25,10 +25,11 @@
 
             <TextView
                 android:id="@+id/emoji0"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:textSize="26sp"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="🇺🇸" />
 
             <LinearLayout
@@ -90,7 +91,10 @@
             android:gravity="start"
             android:text="59,750" />
 
-        <TextView android:id="@+id/update_time" android:layout_width="0dp"
-            android:layout_height="0dp" android:visibility="gone" android:text="" />
+        <TextView android:id="@+id/update_time" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textSize="9sp"
+            android:textColor="@color/text_secondary" android:textDirection="ltr"
+            android:gravity="start" android:alpha="0.7" android:maxLines="1"
+            android:layout_marginTop="2dp" android:text="" />
     </LinearLayout>
 </LinearLayout>

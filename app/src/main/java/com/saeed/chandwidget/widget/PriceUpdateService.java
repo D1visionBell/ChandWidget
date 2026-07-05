@@ -4,8 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -42,6 +40,12 @@ public class PriceUpdateService extends Service {
             } catch (Exception e) {
                 Log.e(TAG, "Error in update", e);
             } finally {
+                // Re-arm the next 30-minute refresh from here, not just from
+                // onUpdate()/BOOT_COMPLETED. This is what makes the schedule
+                // self-healing: as long as one fetch eventually succeeds, the
+                // chain of future updates keeps going even if a prior alarm
+                // was dropped by the OS or the process was killed mid-cycle.
+                PriceWidgetProvider.scheduleAlarm(this);
                 stopSelf(id);
             }
         }).start();
@@ -50,35 +54,13 @@ public class PriceUpdateService extends Service {
     }
 
     private void fetchAndStore() {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(this);
-
-        // Collect keys needed by all widget instances
-        Set<String> keysToFetch = new HashSet<>();
-
-        // Large widgets
-        ComponentName cn = new ComponentName(this, PriceWidgetProvider.class);
-        int[] ids = mgr.getAppWidgetIds(cn);
-        for (int widgetId : ids) {
-            for (int slot = 0; slot < 3; slot++) {
-                String key = Prefs.getSlot(this, widgetId, slot);
-                if (key != null && !key.isEmpty()) keysToFetch.add(key);
-            }
-        }
-
-        // Small widgets
-        ComponentName cnSmall = new ComponentName(this, PriceWidgetProviderSingle.class);
-        int[] smallIds = mgr.getAppWidgetIds(cnSmall);
-        for (int widgetId : smallIds) {
-            for (int slot = 0; slot < 3; slot++) {
-                String key = Prefs.getSlot(this, widgetId, slot);
-                if (key != null && !key.isEmpty()) keysToFetch.add(key);
-            }
-        }
-
-        // FIX: always fetch ALL registry keys so the price list in the app shows everything
-        for (String key : PriceRegistry.ALL.keySet()) {
-            keysToFetch.add(key);
-        }
+        // Fetch every symbol in the registry, not just the ones currently
+        // assigned to a widget slot — the in-app price list (WidgetConfigActivity)
+        // shows all of them too, and the extra requests are cheap. (Previously
+        // this method separately collected keys per-widget-type and then union'd
+        // in the full registry anyway, so the per-widget collection was dead code;
+        // removed it.)
+        Set<String> keysToFetch = new HashSet<>(PriceRegistry.ALL.keySet());
 
         for (String key : keysToFetch) {
             try {
