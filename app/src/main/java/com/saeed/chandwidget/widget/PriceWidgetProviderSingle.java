@@ -105,8 +105,8 @@ public class PriceWidgetProviderSingle extends AppWidgetProvider {
             // instead of sitting next to the emoji like every other item.
             // Basing the gravity on the actual text being shown fixes that
             // without affecting genuinely Persian names/symbols.
-            int nameGravity = (Formatter.containsRtl(nameStr) ? Gravity.END : Gravity.START) | Gravity.CENTER_VERTICAL;
-            int symGravity  = (Formatter.containsRtl(symStr)  ? Gravity.END : Gravity.START) | Gravity.CENTER_VERTICAL;
+            int nameGravity = Gravity.START | Gravity.CENTER_VERTICAL;
+            int symGravity  = Gravity.START | Gravity.CENTER_VERTICAL;
             views.setInt(R.id.name0, "setGravity", nameGravity);
             views.setInt(R.id.sym0,  "setGravity", symGravity);
 
