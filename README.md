@@ -61,6 +61,11 @@
 
 > یک [GitHub Actions workflow](.github/workflows/windows-build.yml) هم هست که با هر push به `windows/` یا با هر تگ `windows-v*`، فایل `.exe` رو خودکار می‌سازه — نیازی به داشتن ویندوز برای build گرفتن نیست، از تب **Actions** (یا از **Releases** روی تگ‌ها) قابل دانلوده.
 
+<br>
+
+<img src="assets/Windows.png">
+
+</div>
 ---
 
 ## 🚀 امکانات
