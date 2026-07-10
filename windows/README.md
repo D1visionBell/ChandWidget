@@ -42,7 +42,6 @@ pyinstaller build.spec
 
 آیکون برنامه (تو تری، تسک‌بار و پنجره‌ی اصلی) از `chandwidget/resources/icon.ico` خونده می‌شه و `build.spec` هم به‌عنوان `datas` و هم به‌عنوان آیکون exe به PyInstaller معرفی‌ش می‌کنه، پس هم فایل exe خودش آیکون داره و هم برنامه در زمان اجرا (چه از سورس، چه از exe فریز‌شده) پیداش می‌کنه.
 
-> این ریپو یک GitHub Actions workflow هم داره (`.github/workflows/windows-build.yml`) که همین مراحل رو خودکار روی هر push به `windows/**` یا هر تگ نسخه اجرا می‌کنه و exe رو به‌عنوان artifact (و روی تگ، به‌عنوان Release asset) منتشر می‌کنه — نیازی نیست حتماً خودت روی ویندوز build کنی.
 
 ## اجرا خودکار هنگام روشن شدن ویندوز
 
@@ -52,7 +51,6 @@ pyinstaller build.spec
 HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
 ```
 
-⚠️ نکته: مسیری که ثبت می‌شه همون `sys.executable` هست. اگه با `python main.py` اجرا کنی، این یعنی مسیر `python.exe` ثبت می‌شه که درست کار نمی‌کنه. این گزینه رو فقط **بعد از ساخت exe و اجرا از همون exe** فعال کن، وگرنه دستی از ثبت (Registry Editor یا PowerShell) پاکش کن.
 
 ## ساختار پروژه
 
