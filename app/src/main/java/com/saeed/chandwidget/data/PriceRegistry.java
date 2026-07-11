@@ -23,7 +23,7 @@ public class PriceRegistry {
         add(PriceItem.KEY_CNY,    "Chinese Yuan",     "یوان چین",       "CNY", "CNY",  "🇨🇳", PriceItem.PriceType.CURRENCY_TOMAN);
         // Gold
         add(PriceItem.KEY_GOLD18, "Gold 18K",         "طلا ۱۸ عیار",   "GOLD", "طلا", "🥇", PriceItem.PriceType.GOLD_TOMAN);
-        add(PriceItem.KEY_SEKKE,  "Azadi Coin",       "سکه بهار آزادی","COIN", "سکه", "🪙", PriceItem.PriceType.GOLD_TOMAN);
+        add(PriceItem.KEY_SEKKE,  "Emami Coin",       "سکه امامی",     "COIN", "سکه", "🪙", PriceItem.PriceType.GOLD_TOMAN);
         add(PriceItem.KEY_NIM,    "Half Coin",        "نیم سکه",       "HALF", "نیم", "🪙", PriceItem.PriceType.GOLD_TOMAN);
         add(PriceItem.KEY_ROB,    "Quarter Coin",     "ربع سکه",       "QTR",  "ربع", "🪙", PriceItem.PriceType.GOLD_TOMAN);
         add(PriceItem.KEY_GOLD_OUNCE, "Gold Ounce",   "اونس طلا",      "XAU",  "اونس", "🥇", PriceItem.PriceType.GOLD_USD);

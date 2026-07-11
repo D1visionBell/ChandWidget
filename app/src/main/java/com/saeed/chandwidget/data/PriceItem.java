@@ -14,7 +14,7 @@ public class PriceItem {
     public static final String KEY_CNY    = "price_cny";
     // Gold — use /v1/market/tmp endpoint
     public static final String KEY_GOLD18 = "geram18";
-    public static final String KEY_SEKKE  = "sekeb";   // سکه بهار آزادی
+    public static final String KEY_SEKKE  = "sekee";   // سکه امامی
     public static final String KEY_NIM    = "nim";     // نیم سکه
     public static final String KEY_ROB    = "rob";     // ربع سکه
     // Gold — world ounce price, already quoted in USD (not Rial like the
