@@ -68,7 +68,7 @@ class ChandWidgetApp:
         self.settings = Settings()
         self.refresh_mgr = RefreshManager()
 
-        self.widget = WidgetWindow(dark=False)
+        self.widget = WidgetWindow(dark=self.settings.get_dark_mode())
         self.main_win = MainWindow(self.settings)
         self.main_win.setWindowIcon(self.app_icon)
 
@@ -96,11 +96,13 @@ class ChandWidgetApp:
         w.quit_requested.connect(self.quit)
         w.toggle_top_requested.connect(self._set_always_on_top)
         w.toggle_startup_requested.connect(self._set_startup)
+        w.toggle_dark_requested.connect(self._set_dark_mode)
         w.moved.connect(lambda x, y: self.settings.set_widget_pos(x, y))
 
         m.refresh_requested.connect(self._do_refresh)
         m.language_toggled.connect(self._set_language)
         m.slot_changed.connect(self._set_slot)
+        m.dark_mode_toggled.connect(self._set_dark_mode)
 
         self.refresh_mgr.price_updated.connect(self._on_price_updated)
 
@@ -184,6 +186,11 @@ class ChandWidgetApp:
     def _set_startup(self, on: bool):
         self.settings.set_run_at_startup(on)
         set_startup_enabled(on)
+
+    def _set_dark_mode(self, on: bool):
+        self.settings.set_dark_mode(on)
+        self.widget.set_dark(on)
+        self.main_win.set_dark(on)
 
     # -- tray --
     def _setup_tray(self):

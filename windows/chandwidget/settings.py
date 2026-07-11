@@ -33,6 +33,7 @@ _DEFAULTS = {
     "widget_pos": None,          # [x, y] or None = let OS place it first run
     "always_on_top": True,
     "run_at_startup": False,
+    "dark_mode": False,
     "refresh_seconds": 60,
     "cache": {},                 # key -> {"price": .., "change": ..}
     "cache_time": 0,
@@ -115,6 +116,13 @@ class Settings:
 
     def set_run_at_startup(self, val: bool):
         self._data["run_at_startup"] = val
+        _save(self._data)
+
+    def get_dark_mode(self) -> bool:
+        return bool(self._data.get("dark_mode", False))
+
+    def set_dark_mode(self, val: bool):
+        self._data["dark_mode"] = val
         _save(self._data)
 
     def get_refresh_seconds(self) -> int:

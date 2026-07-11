@@ -115,6 +115,12 @@ class _Row(QWidget):
 
     def _apply_colors(self):
         primary = TEXT_PRIMARY_DARK if self.dark else TEXT_PRIMARY_LIGHT
+        # Plain glyph symbols ($, ₿, Ξ, Ł, ✕, ◎, AED, CHF, A$, C$, CN¥...)
+        # paint using the label's text color, same as any other text — only
+        # true pictorial emoji (🥇🪙🔶💠🐕🔺⚫🟢) carry their own embedded
+        # color and ignore this. So emoji_lbl needs the theme color too,
+        # otherwise every currency using a plain symbol stays black-on-dark.
+        self.emoji_lbl.setStyleSheet(f"color: {primary.name()};")
         self.sym_lbl.setStyleSheet(f"color: {primary.name()};")
         self.price_lbl.setStyleSheet(f"color: {primary.name()};")
 
@@ -165,6 +171,7 @@ class WidgetWindow(QWidget):
     quit_requested = Signal()
     toggle_top_requested = Signal(bool)
     toggle_startup_requested = Signal(bool)
+    toggle_dark_requested = Signal(bool)
     moved = Signal(int, int)       # emitted after a drag ends
 
     def __init__(self, dark: bool = False):
@@ -177,24 +184,28 @@ class WidgetWindow(QWidget):
             Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool
         )
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setFixedWidth(CARD_WIDTH)
+        # 190x190 matches ShamsiCalWidget's WIDGET_SIZE exactly, so the two
+        # floating cards line up when stacked on the desktop. Row internal
+        # margins/fonts are untouched; only this outer card size and the
+        # margins right above are what changed to make 3 rows fit exactly
+        # inside a 190px-tall square instead of floating a few px taller.
+        self.setFixedSize(CARD_WIDTH, CARD_WIDTH)
 
         outer = QVBoxLayout(self)
-        outer.setContentsMargins(0, 4, 0, 4)
+        outer.setContentsMargins(0, 2, 0, 2)
         outer.setSpacing(0)
 
         self.rows = [_Row(dark) for _ in range(3)]
+        self._separators = []
         for i, row in enumerate(self.rows):
             outer.addWidget(row)
             if i < 2:
                 sep = QWidget()
                 sep.setFixedHeight(1)
-                sep.setStyleSheet("background-color: rgba(0,0,0,0.09);")
                 outer.addWidget(sep)
+                self._separators.append(sep)
+        self._apply_separator_colors()
 
-        # Width stays fixed (set above); height is computed from the real
-        # sizeHint of the rows (i.e. real font metrics) instead of a guess.
-        self.adjustSize()
 
     # -- painting the rounded card background --
     def paintEvent(self, event):
@@ -208,10 +219,16 @@ class WidgetWindow(QWidget):
         )
         painter.fillPath(path, CARD_BG_DARK if self.dark else CARD_BG_LIGHT)
 
+    def _apply_separator_colors(self):
+        color = "rgba(255,255,255,0.10)" if self.dark else "rgba(0,0,0,0.09)"
+        for sep in self._separators:
+            sep.setStyleSheet(f"background-color: {color};")
+
     def set_dark(self, dark: bool):
         self.dark = dark
         for row in self.rows:
             row.set_dark(dark)
+        self._apply_separator_colors()
         self.update()
 
     # -- data --
@@ -255,6 +272,9 @@ class WidgetWindow(QWidget):
         act_top.setChecked(bool(self.windowFlags() & Qt.WindowStaysOnTopHint))
         act_startup = menu.addAction("اجرا هنگام روشن شدن ویندوز")
         act_startup.setCheckable(True)
+        act_dark = menu.addAction("حالت تیره")
+        act_dark.setCheckable(True)
+        act_dark.setChecked(self.dark)
         menu.addSeparator()
         act_quit = menu.addAction("خروج")
 
@@ -267,5 +287,7 @@ class WidgetWindow(QWidget):
             self.toggle_top_requested.emit(act_top.isChecked())
         elif chosen == act_startup:
             self.toggle_startup_requested.emit(act_startup.isChecked())
+        elif chosen == act_dark:
+            self.toggle_dark_requested.emit(act_dark.isChecked())
         elif chosen == act_quit:
             self.quit_requested.emit()

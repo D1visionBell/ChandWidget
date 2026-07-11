@@ -23,7 +23,7 @@ COLOR_UP = "#E53935"
 COLOR_DOWN = "#43A047"
 CARD_COLUMNS = 3
 
-_STYLE_SHEET = """
+_STYLE_LIGHT = """
 #centralWidget { background: #F2F2F7; }
 #headerTitle { color: #1C1C1E; font-size: 20px; font-weight: 700; }
 #headerSubtitle { color: #8E8E93; font-size: 12px; }
@@ -56,11 +56,55 @@ _STYLE_SHEET = """
 QScrollArea { border: none; background: transparent; }
 #cardsContainer { background: transparent; }
 #priceCard { background: #FFFFFF; border-radius: 16px; }
-#cardEmoji { font-size: 22px; }
+#cardEmoji { font-size: 22px; color: #1C1C1E; }
 #cardName { color: #8E8E93; font-size: 11px; font-weight: 600; }
 #cardChange { font-size: 11px; font-weight: 700; }
 #cardPrice { color: #1C1C1E; font-size: 17px; font-weight: 700; }
 #footer { color: #8E8E93; padding: 6px 0; font-size: 11px; }
+"""
+
+# Same layout/rules as light, only the palette changes — kept as a
+# parallel sheet (rather than deriving colors at runtime) so every color
+# stays reviewable in one place, same approach as CARD_BG_LIGHT/DARK in
+# widget_window.py.
+_STYLE_DARK = """
+#centralWidget { background: #1C1C1E; }
+#headerTitle { color: #FFFFFF; font-size: 20px; font-weight: 700; }
+#headerSubtitle { color: #98989D; font-size: 12px; }
+#searchBox {
+    background: #2C2C2E; border: 1px solid #3A3A3C; border-radius: 15px;
+    padding: 7px 14px; font-size: 13px; color: #FFFFFF;
+}
+#searchBox:focus { border: 1px solid #0A84FF; }
+#pillButton {
+    background: #2C2C2E; border: 1px solid #3A3A3C; border-radius: 15px;
+    padding: 7px 16px; font-size: 12px; font-weight: 600; color: #FFFFFF;
+}
+#pillButton:hover { background: #3A3A3C; }
+#refreshButton {
+    background: #0A84FF; border: none; border-radius: 15px;
+    padding: 7px 16px; font-size: 12px; font-weight: 600; color: #FFFFFF;
+}
+#refreshButton:hover { background: #3396FF; }
+#slotGroup {
+    background: #2C2C2E; border-radius: 16px; border: none;
+    margin-top: 12px; padding-top: 14px; font-size: 13px;
+    font-weight: 700; color: #FFFFFF;
+}
+#slotGroup::title { subcontrol-origin: margin; left: 14px; padding: 0 4px; }
+#slotGroup QLabel { color: #98989D; font-weight: 600; font-size: 12px; }
+#slotGroup QComboBox {
+    border: 1px solid #3A3A3C; border-radius: 9px; padding: 4px 8px;
+    background: #1C1C1E; color: #FFFFFF; min-height: 22px;
+}
+QScrollArea { border: none; background: transparent; }
+#cardsContainer { background: transparent; }
+#priceCard { background: #2C2C2E; border-radius: 16px; }
+#cardEmoji { font-size: 22px; color: #FFFFFF; }
+#cardName { color: #98989D; font-size: 11px; font-weight: 600; }
+#cardChange { font-size: 11px; font-weight: 700; }
+#cardPrice { color: #FFFFFF; font-size: 17px; font-weight: 700; }
+#footer { color: #98989D; padding: 6px 0; font-size: 11px; }
 """
 
 
@@ -73,6 +117,7 @@ class _PriceCard(QFrame):
         super().__init__(parent)
         self.item = item
         self.setObjectName("priceCard")
+        self.setAttribute(Qt.WA_StyledBackground, True)
         self.setMinimumHeight(92)
 
         shadow = QGraphicsDropShadowEffect(self)
@@ -124,6 +169,7 @@ class MainWindow(QMainWindow):
     refresh_requested = Signal()
     language_toggled = Signal(bool)     # new persian value
     slot_changed = Signal(int, str)     # slot index, key
+    dark_mode_toggled = Signal(bool)    # new dark-mode value
 
     def __init__(self, settings):
         super().__init__()
@@ -131,7 +177,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Chand")
         self.resize(760, 720)
         self.setMinimumSize(520, 480)
-        self.setStyleSheet(_STYLE_SHEET)
+        self.setStyleSheet(_STYLE_DARK if self.settings.get_dark_mode() else _STYLE_LIGHT)
 
         central = QWidget()
         central.setObjectName("centralWidget")
@@ -164,6 +210,11 @@ class MainWindow(QMainWindow):
         self.lang_btn.setObjectName("pillButton")
         self.lang_btn.clicked.connect(self._on_lang_clicked)
         top_bar.addWidget(self.lang_btn)
+
+        self.dark_btn = QPushButton()
+        self.dark_btn.setObjectName("pillButton")
+        self.dark_btn.clicked.connect(self._on_dark_clicked)
+        top_bar.addWidget(self.dark_btn)
 
         self.refresh_btn = QPushButton("↻ به‌روزرسانی")
         self.refresh_btn.setObjectName("refreshButton")
@@ -213,9 +264,10 @@ class MainWindow(QMainWindow):
         self._cards = {}
         self._build_cards(items)
         self._refresh_lang_texts()
+        self._refresh_dark_text()
 
         # -- footer --
-        footer = QLabel("ChandWidget — نسخه ۱.۰.۰")
+        footer = QLabel("نسخه 1.0.0  -  توسعه و طراحی توسط حمید قاسمی")
         footer.setObjectName("footer")
         footer.setAlignment(Qt.AlignCenter)
         root.addWidget(footer)
@@ -265,9 +317,24 @@ class MainWindow(QMainWindow):
         self.slot_group.setTitle("نمادهای ویجت دسکتاپ" if persian else "Desktop widget symbols")
         for key, card in self._cards.items():
             card.set_name(self._name_for(R.get(key)), persian)
+        self._refresh_dark_text()
 
     def _on_lang_clicked(self):
         self.language_toggled.emit(not self.settings.is_persian())
+
+    def _refresh_dark_text(self):
+        persian = self.settings.is_persian()
+        if self.settings.get_dark_mode():
+            self.dark_btn.setText("☀️ روشن" if persian else "☀️ Light")
+        else:
+            self.dark_btn.setText("🌙 تیره" if persian else "🌙 Dark")
+
+    def _on_dark_clicked(self):
+        self.dark_mode_toggled.emit(not self.settings.get_dark_mode())
+
+    def set_dark(self, dark: bool):
+        self.setStyleSheet(_STYLE_DARK if dark else _STYLE_LIGHT)
+        self._refresh_dark_text()
 
     def apply_language_changed(self):
         """Call after settings.set_language() to refresh all labels/text in place."""
