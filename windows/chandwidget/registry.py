@@ -38,7 +38,7 @@ KEY_JPY = "price_jpy"
 KEY_CNY = "price_cny"
 
 KEY_GOLD18 = "geram18"
-KEY_SEKKE = "sekeb"
+KEY_SEKKE = "sekee"
 KEY_NIM = "nim"
 KEY_ROB = "rob"
 KEY_GOLD_OUNCE = "ons"
@@ -81,7 +81,7 @@ _add(KEY_CNY, "Chinese Yuan", "یوان چین", "CNY", "CNY", "CN¥", PriceType
 
 # Gold
 _add(KEY_GOLD18, "Gold 18K", "طلا ۱۸ عیار", "GOLD", "طلا", "🥇", PriceType.GOLD_TOMAN)
-_add(KEY_SEKKE, "Azadi Coin", "سکه بهار آزادی", "COIN", "سکه", "🪙", PriceType.GOLD_TOMAN)
+_add(KEY_SEKKE, "Emami Coin", "سکه امامی", "COIN", "سکه", "🪙", PriceType.GOLD_TOMAN)
 _add(KEY_NIM, "Half Coin", "نیم سکه", "HALF", "نیم", "🪙", PriceType.GOLD_TOMAN)
 _add(KEY_ROB, "Quarter Coin", "ربع سکه", "QTR", "ربع", "🪙", PriceType.GOLD_TOMAN)
 _add(KEY_GOLD_OUNCE, "Gold Ounce", "اونس طلا", "XAU", "اونس", "🥇", PriceType.GOLD_USD)
